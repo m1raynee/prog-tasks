@@ -37,7 +37,7 @@ int main()
     P2 = ((x4*x2 - 1)*x2 + 1)*x*a2;
     cout << "P2 =";
     cout << setw(20) << setprecision(10) << P2 << endl;
-    
+
     cout << "Для x = " << setprecision(10) << x << ", P1*P2 равно:" << endl;
     cout << setw(20) << setprecision(10) << P1*P2 << endl;
 

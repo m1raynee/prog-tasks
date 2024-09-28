@@ -33,11 +33,8 @@ a         , - ~  - - - - - - - - - - - - - - - - - - - - - - - - - - - , - ~  -
 Даты: начало: 24.09.2024                        конец: когда рак на горе свистнет
 */
 
-
-
 #include <iostream>
-#include <iomanip>
-#include <math.h>
+#include <cmath>
 
 int main()
 {
@@ -68,7 +65,7 @@ int main()
     std::cout << "|                        , '                                                          , '         " << std::endl;
     std::cout << "|               _ _ , _' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ , _'             " << std::endl;
     std::cout << "|——————————————————————————————————————————————————————————————————————————————————————————b—————>" << std::endl;
-    
+
     std::cout << "Автор: Егор Даричев (гр. 4352) Версия: 2.1.134" << std::endl;
 
     double a,b,x,y;
@@ -104,32 +101,21 @@ int main()
         return -1;
     }
 
-    int k_x = x/b, k_y = y/a;
-    const int sign_a = (a > 0) - (a < 0);
-    const int sign_b = (b > 0) - (b < 0);
-    x = remainder(x, b);
-    y = remainder(y, a);
-    
-    const int sign_x = (x > 0) - (x < 0);
-    const int sign_y = (y > 0) - (y < 0);
-    // if (a > 0 and b < 0) {k_y--;}
-    // if (a < 0 and b > 0) {k_x--;}
-    // if (sign_x != sign_b) {
-    //     x += b;
-    // }
-    // if (sign_y != sign_a) {
-    //     y += a;
-    // }
-    // if (sign_a  sign_b)
+    const int k_x = floor(1-x/b);
+    const int k_y = floor(1-y/a);
 
-    if (true) {
-        std::cout << k_x << " " << k_y << std::endl;
-        std::cout << "not in the shape. out of periodic";
+    x += b*k_x;
+    y += a*k_y;
+
+    if (abs(k_x) != abs(k_y)) {
+        std::cout << "Не входит (период)";
         return 0;
     }
 
 
     int res = -1;
+
+    int sign_b = (b > 0) - (b < 0);
 
     if (2*abs(b) == abs(a)) {
         res = 10;
