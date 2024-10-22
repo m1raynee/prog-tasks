@@ -36,12 +36,6 @@ int main() {
             cin.getline(filename, 100);
             for (start = filename; *start and *start == ' '; start++);
             len = 0;
-            // if (*start == '\"') {
-            //     start++;
-            //     while (start[len] and start[len] != '\"') len++;
-            //     start[len] = '\0';
-            // }
-            // else 
             if (*start) {
                 while (start[len] and start[len] != ' ') len++;
                 start[len] = '\0';
