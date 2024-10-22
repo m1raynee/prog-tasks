@@ -59,7 +59,7 @@ int main() {
     }
     if (!(fF.is_open() and fG.is_open())) {
         cout << "Превышено количество попыток ввода пути для файла G. " << endl;
-        return 0;
+        goto EXIT;
     }
 
     cur_file = &fF; cur_buff = bufferF;
@@ -68,15 +68,15 @@ int main() {
         cout << "Файл " << file_char << ':' << endl;
         f << "Файл " << file_char << ':' << endl;
         if (cur_file->eof()) {
-            len = 0;
             cout << "Ошибка, отсутствует заявление о числе элементов" << endl;
             f << "Ошибка, отсутствует заявление о числе элементов" << endl;
+            goto EXIT;
         } else {
             len = unsigned(cur_buff[0]);
             if ((abs(float(len) - cur_buff[0]) >= eps) or (cur_buff[0] < 0.f)) {
                 cout << "Заявленное число элементов не может быть отрицательным или нецелым." << endl;
                 f << "Заявленное число элементов не может быть отрицательным или нецелым." << endl;
-                len = 0;
+                goto EXIT;
             }
         }
 
@@ -135,5 +135,6 @@ EXIT:
     f.close();
     if (fF.is_open()) fF.close();
     if (fG.is_open()) fG.close();
+    cout << endl << "Работа программы завершена" << endl;
     return 0;
 }
