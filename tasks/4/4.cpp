@@ -1,3 +1,10 @@
+/*
+Задание: В массивах хранятся 2 упорядоченных множества F и G соответственно. Сформировать новый массив с множеством H = F ^ G (симметрическая разность)
+Ограничения: -10^10 < a(i) < 10^10 с точностью до 30 знаков после запятой.
+Автор: Даричев Е.М.
+Версия: 4.1.15
+*/
+
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -9,6 +16,11 @@ const float eps = 1.e-30f;
 const unsigned BUFFER_SIZE = 200;
 
 int main() {
+    cout << "Задание: В массивах хранятся 2 упорядоченных множества F и G соответственно. "
+    "Сформировать новый массив с множеством H = F ^ G (симметрическая разность)" << endl;
+    cout << "Ограничения: -10^10 < a(i) < 10^10 с точностью до 30 знаков после запятой." << endl;
+    cout << "Автор: Даричев Е.М." << endl;
+
     fstream fF, fG;
     fstream* cur_file;
 
@@ -26,7 +38,11 @@ int main() {
 
     if (!f.is_open()) {
         cout << "Не удалось открыть выходной файл." << endl;
-        goto EXIT;
+        f.close();
+        if (fF.is_open()) fF.close();
+        if (fG.is_open()) fG.close();
+        cout << endl << "Работа программы завершена" << endl;
+        return 0;
     }
 
     while (i <= 6) {
@@ -48,7 +64,7 @@ int main() {
                 } else {
                     cout << "Не удалось открыть файл " << (i <= 3 ? 'F' : 'G') << "\"" << start << "\"." << endl;
                     cin.clear();
-                    ++i;
+                    i++;
                     if (i > 3 and !fF.is_open()) {
                         cout << "Превышено количество попыток ввода пути для файла F. " << endl;
                     }
@@ -59,7 +75,11 @@ int main() {
     }
     if (!(fF.is_open() and fG.is_open())) {
         cout << "Превышено количество попыток ввода пути для файла G. " << endl;
-        goto EXIT;
+        f.close();
+        if (fF.is_open()) fF.close();
+        if (fG.is_open()) fG.close();
+        cout << endl << "Работа программы завершена" << endl;
+        return 0;
     }
 
     cur_file = &fF; cur_buff = bufferF;
@@ -70,18 +90,27 @@ int main() {
         if (cur_file->eof()) {
             cout << "Ошибка, отсутствует заявление о числе элементов" << endl;
             f << "Ошибка, отсутствует заявление о числе элементов" << endl;
-            goto EXIT;
+            f.close();
+            if (fF.is_open()) fF.close();
+            if (fG.is_open()) fG.close();
+            cout << endl << "Работа программы завершена" << endl;
+            return 0;
         } else {
             len = unsigned(cur_buff[0]);
             if ((abs(float(len) - cur_buff[0]) >= eps) or (cur_buff[0] < 0.f)) {
                 cout << "Заявленное число элементов не может быть отрицательным или нецелым." << endl;
                 f << "Заявленное число элементов не может быть отрицательным или нецелым." << endl;
-                goto EXIT;
+                f.close();
+                if (fF.is_open()) fF.close();
+                if (fG.is_open()) fG.close();
+                cout << endl << "Работа программы завершена" << endl;
+                return 0;
             }
         }
 
         while (iF < len and iF < BUFFER_SIZE) {
             if (cur_file->eof()) {
+                iF--;
                 cout << "Считано " << iF << " значений элементов, что меньше заявленного их числа." << endl;
                 f << "Считано " << iF << " значений элементов, что меньше заявленного их числа." << endl;
                 break;
@@ -98,7 +127,7 @@ int main() {
 
         cout << "Считан массив (" << iF << " элементов): " << endl << "[";
         f << "Считан массив (" << iF << " элементов): " << endl << "[";
-        for (unsigned int m = 0; m < len; m++) {
+        for (unsigned int m = 0; m < iF; m++) {
             cout << ' ' << cur_buff[m];
             f << ' ' << cur_buff[m];
         }
@@ -110,28 +139,31 @@ int main() {
     }
 
     f << "Новый массив H:" << endl;
+    float bufferH[BUFFER_SIZE * 2] = {};
+    unsigned int iH = 0;
 
     while (iF < lenF and iG < lenG) {
         if (abs(bufferF[iF] - bufferG[iG]) < eps) {
             iF++; iG++;
         } else if (bufferF[iF] < bufferG[iG]) {
-            f << bufferF[iF] << ' ';
+            bufferH[iH++] = bufferF[iF];
             iF++;
         } else {
-            f << bufferG[iG] << ' ';
+            bufferH[iH++] = bufferG[iG];
             iG++;
         }
     }
     while (iF < lenF) {
-        f << bufferF[iF] << ' ';
+        bufferH[iH++] = bufferF[iF];
         iF++;
     }
     while (iG < lenG) {
-        f << bufferG[iG] << ' ';
+        bufferH[iH++] = bufferG[iG];
         iG++;
     }
 
-EXIT:
+    for (i = 0; i < iH; i++) f << bufferH[i] << ' ';
+
     f.close();
     if (fF.is_open()) fF.close();
     if (fG.is_open()) fG.close();
