@@ -35,10 +35,10 @@ int main() {
 
     char filename[100]{};
 
-    fstream Result;
-    Result.open("result.txt", ios::out);
+    fstream result;
+    result.open("result.txt", ios::out);
 
-    if (!Result.is_open()) {
+    if (!result.is_open()) {
         cout << "Не удалось открыть выходной файл." << endl;
         goto EXIT;
     }
@@ -73,37 +73,37 @@ int main() {
 
     for (i = 0; i < 2; i++) {
         len = 0;
-        cout << "Файл " << file_chars[i] << ':' << endl;
-        Result << "Файл " << file_chars[i] << ':' << endl;
+        cout << "Файл " << *(file_chars+i) << ':' << endl;
+        result << "Файл " << *(file_chars+i) << ':' << endl;
 
-        while (!fs[i]->eof()) {
-            *fs[i] >> *reinterpret_cast<float*>(&(*(bufs[i])));
+        while (!(*(fs+i))->eof()) {
+            **(fs+i) >> *reinterpret_cast<float*>(*(bufs+i));
             len++;
         }
 
-        fs[i]->seekp(0).clear();
-        *bufs[i] = new float[len];
+        (*(fs+i))->seekp(0).clear();
+        **(bufs+i) = new float[len];
 
         while (iF < len) {
-            *fs[i] >> *((*bufs[i]) + iF++);
+            **(fs+i) >> *((**(bufs+i)) + iF++);
         }
 
         (i == 0 ? lenF : lenG) = iF;
-        fs[i]->close();
+        (*(fs+i))->close();
 
         cout << "Считан массив (" << iF << " элементов): " << endl << "[";
-        Result << "Считан массив (" << iF << " элементов): " << endl << "[";
+        result << "Считан массив (" << iF << " элементов): " << endl << "[";
         for (unsigned int m = 0; m < iF; m++) {
-            cout << ' ' << *((*bufs[i])+m);
-            Result << ' ' << *((*bufs[i])+m);
+            cout << ' ' << *((**(bufs+i))+m);
+            result << ' ' << *((**(bufs+i))+m);
         }
         cout << " ]" << endl;
-        Result << " ]" << endl;
+        result << " ]" << endl;
 
         iF = 0;
     }
 
-    Result << "Новый массив H:" << endl;
+    result << "Новый массив H:" << endl;
     H = new float[lenF + lenG];
 
     while (iF < lenF and iG < lenG) {
@@ -120,10 +120,10 @@ int main() {
         *(H + iH++) = *(G+iG++);
     }
 
-    for (i = 0; i < iH; i++) Result << *(H+i) << ' ';
+    for (i = 0; i < iH; i++) result << *(H+i) << ' ';
 
 EXIT:
-    Result.close();
+    result.close();
     if (fF.is_open()) fF.close();
     if (fG.is_open()) fG.close();
     cout << endl << "Работа программы завершена" << endl;
