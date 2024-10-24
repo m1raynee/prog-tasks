@@ -28,6 +28,9 @@ int main() {
     float* cur_buff;
     char file_char = 'F';
 
+    float bufferH[BUFFER_SIZE * 2] = {};
+    unsigned int iH = 0;
+
     unsigned int i = 0, len, lenF = 0, lenG = 0, iF = 0, iG = 0;
 
     char filename[100];
@@ -38,11 +41,7 @@ int main() {
 
     if (!f.is_open()) {
         cout << "Не удалось открыть выходной файл." << endl;
-        f.close();
-        if (fF.is_open()) fF.close();
-        if (fG.is_open()) fG.close();
-        cout << endl << "Работа программы завершена" << endl;
-        return 0;
+        goto EXIT;
     }
 
     while (i <= 6) {
@@ -75,11 +74,7 @@ int main() {
     }
     if (!(fF.is_open() and fG.is_open())) {
         cout << "Превышено количество попыток ввода пути для файла G. " << endl;
-        f.close();
-        if (fF.is_open()) fF.close();
-        if (fG.is_open()) fG.close();
-        cout << endl << "Работа программы завершена" << endl;
-        return 0;
+        goto EXIT;
     }
 
     cur_file = &fF; cur_buff = bufferF;
@@ -90,21 +85,13 @@ int main() {
         if (cur_file->eof()) {
             cout << "Ошибка, отсутствует заявление о числе элементов" << endl;
             f << "Ошибка, отсутствует заявление о числе элементов" << endl;
-            f.close();
-            if (fF.is_open()) fF.close();
-            if (fG.is_open()) fG.close();
-            cout << endl << "Работа программы завершена" << endl;
-            return 0;
+            goto EXIT;
         } else {
             len = unsigned(cur_buff[0]);
             if ((abs(float(len) - cur_buff[0]) >= eps) or (cur_buff[0] < 0.f)) {
                 cout << "Заявленное число элементов не может быть отрицательным или нецелым." << endl;
                 f << "Заявленное число элементов не может быть отрицательным или нецелым." << endl;
-                f.close();
-                if (fF.is_open()) fF.close();
-                if (fG.is_open()) fG.close();
-                cout << endl << "Работа программы завершена" << endl;
-                return 0;
+                goto EXIT;
             }
         }
 
@@ -139,8 +126,6 @@ int main() {
     }
 
     f << "Новый массив H:" << endl;
-    float bufferH[BUFFER_SIZE * 2] = {};
-    unsigned int iH = 0;
 
     while (iF < lenF and iG < lenG) {
         if (abs(bufferF[iF] - bufferG[iG]) < eps) {
@@ -164,6 +149,7 @@ int main() {
 
     for (i = 0; i < iH; i++) f << bufferH[i] << ' ';
 
+EXIT:
     f.close();
     if (fF.is_open()) fF.close();
     if (fG.is_open()) fG.close();
