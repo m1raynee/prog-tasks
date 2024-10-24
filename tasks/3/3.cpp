@@ -17,8 +17,8 @@ using namespace std;
 
 int main() {
     int i = 0;
-    long long int mult; 
-    long double eps, xi = 1, si = 0;
+    double mult; 
+    long double q, eps, xi = 1, si = 0;
 
     ofstream Logs("latest.log");
 
@@ -49,51 +49,37 @@ int main() {
         Logs << "Введите eps: " << eps << endl;
         i++;
     } while (i < 3 and eps > 1e-7);
-    if (i >= 3) {
-        cout << "Вы слишком глупый, чтобы пользоваться этой программой" << endl;
-        Logs << "Вы слишком глупый, чтобы пользоваться этой программой" << endl;
+    if (i >= 3 and eps > 1e-7) {
+        cout << "Извините, но Вы слишком глупый, чтобы пользоваться этой программой" << endl;
+        Logs << "Извините, но Вы слишком глупый, чтобы пользоваться этой программой" << endl;
         return 0;
     }
 
     i = 0;
-    long double xii;
-    long long int fac_even = 1;
-    long long int fac_odd = 1;
+    long long unsigned int fac_even = 1;
+    long long unsigned int fac_odd = 1;
 
-    cout << setw(3) << "i" << "|" << setw(20) << "xi" << "|" << setw(20) << "si" << "|" << endl;
-    cout << "----------------------------------------------" << endl;
-    Logs << setw(3) << "i" << "|" << setw(20) << "xi" << "|" << setw(20) << "si" << "|" << endl;
-    Logs << "----------------------------------------------" << endl;
+    cout << setw(3) << "i" << "|" << setw(20) << "xi" << "|" << setw(20) << "si" << "|" << setw(20) << "q" << "|" << endl;
+    cout << "-------------------------------------------------------------------" << endl;
+    Logs << setw(3) << "i" << "|" << setw(20) << "xi" << "|" << setw(20) << "si" << "|" << setw(20) << "q" << "|" << endl;
+    Logs << "-------------------------------------------------------------------" << endl;
     do
     {
         i++;
-        xii = -mult;
-        if (i%2) {
-            // fac_odd;
-            xii *= fac_even;
-            for (int n = (i == 1 ? 1 : 3*(i-2)*(i-2))+2; n<=3*i*i; n+=2) {
-                cout << n << " ";
-                fac_odd *= n;
-            }
-            cout << endl;
-            xii /= fac_odd;
-        }
-        else {
-            // fac_even;
-            xii *= fac_odd;
-            for (int n = (i == 2 ? 2 : 3*(i-2)*(i-2))+2; n<=3*i*i; n+=2) {
-                cout << n << " ";
-                fac_even *= n;
-            }
-            cout << endl;
-            xii /= fac_even;
 
+        q = -mult * (i%2 ? fac_even : fac_odd);
+        for (int n = (i <= 2 ? i : ((3*(i-2)*(i-2))+2)); n<=3*i*i; n=n+2) {
+            // cout << n << " ";
+            (i%2 ? fac_odd : fac_even) *= n;
         }
-        xi *= xii;
+        // cout << endl;
+        q /= (i%2 ? fac_odd : fac_even);
+
+        xi *= q;
         si += xi;
 
-        cout << setw(3) << i << "|" << setw(20) << xi << "|" << setw(20) << si << "|" << endl;
-        Logs << setw(3) << i << "|" << setw(20) << xi << "|" << setw(20) << si << "|" << endl;
+        cout << setw(3) << i << "|" << setw(20) << xi << "|" << setw(20) << si << "|" << setw(20) << q << "|" << endl;
+        Logs << setw(3) << i << "|" << setw(20) << xi << "|" << setw(20) << si << "|" << setw(20) << q << "|" << endl;
 
     } while (i < 1000 and abs(xi) > eps);
 
