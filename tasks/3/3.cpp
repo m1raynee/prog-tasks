@@ -20,7 +20,7 @@ int main() {
     double mult; 
     long double q, eps, xi = 1, si = 0;
 
-    ofstream Logs("latest.log");
+    fstream Logs("latest.log");
 
     cout << "Задание: Определить минимальное значение n > 0, для которого очередное слагаемое" <<
     "по модулю не превышает ε > 0 при нахождении результата согласно следующей формуле:" << endl;
