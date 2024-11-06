@@ -19,57 +19,28 @@ int main() {
     cout << "Ограничения: -10^10 < a(i) < 10^10 с точностью до 30 знаков после запятой." << endl;
     cout << "Автор: Даричев Е.М." << endl;
 
-    fstream fF, fG;
-    fstream* cur_file;
+    fstream fF, fG, result;
+    fstream *fs[]{&fF, &fG};
 
-    float *F, *G;
+    float *F, *G, *H;
+    float **arrays[]{&F, &G};
+
     char file_chars[] = "FG";
+    unsigned int i = 0, len, lenF = 0, lenG = 0, iF = 0, iG = 0, iH = 0;
 
-    float* H;
-    unsigned int iH = 0;
-
-    unsigned int i = 0, len, lenF = 0, lenG = 0, iF = 0, iG = 0;
-
-    float** bufs[] = {&F, &G};
-    fstream* fs[] = {&fF, &fG};
-
-    char filename[100]{};
-
-    fstream result;
     result.open("result.txt", ios::out);
-
     if (!result.is_open()) {
         cout << "Не удалось открыть выходной файл." << endl;
         goto EXIT;
     }
 
-    while (i <= 6) {
-        cout << "Введите путь к файлу " << (i <= 3 ? 'F' : 'G') << ": ";
-        cur_file = &(i <= 3 ? fF : fG);
-        for (;;) {
-            if (cin.eof()) break;
-            cin.getline(filename, 100);
-            cur_file->open(filename, ios::in);
-            if ((cur_file)->is_open()) {
-                i = i <= 3 ? 4 : 7;
-                break;
-            } else {
-                cout << "Не удалось открыть файл " << (i <= 3 ? 'F' : 'G') << "\"" << filename << "\"." << endl;
-                cin.clear();
-                i++;
-                if (i > 3 and !fF.is_open()) {
-                    cout << "Превышено количество попыток ввода пути для файла F. " << endl;
-                }
-                break;
-            }
-        }
-    }
+    fF.open("prF", ios::in);
+    fG.open("prG", ios::in);
+
     if (!(fF.is_open() and fG.is_open())) {
-        cout << "Превышено количество попыток ввода пути для файла G. " << endl;
+        cout << "Ошибка, не удалось открыть один из входных файлов." << endl;
         goto EXIT;
     }
-
-
 
     for (i = 0; i < 2; i++) {
         len = 0;
@@ -77,16 +48,18 @@ int main() {
         result << "Файл " << *(file_chars+i) << ':' << endl;
 
         while (!(*(fs+i))->eof()) {
-            **(fs+i) >> *reinterpret_cast<float*>(*(bufs+i));
+            **(fs+i) >> *reinterpret_cast<float*>(*(arrays+i));
             len++;
         }
 
-        (*(fs+i))->seekp(0).clear();
-        **(bufs+i) = new float[len];
+        (*(fs+i))->clear();
+        (*(fs+i))->seekg(0);
+        **(arrays+i) = new float[len];
 
         while (iF < len) {
-            **(fs+i) >> *((**(bufs+i)) + iF++);
+            **(fs+i) >> *((**(arrays+i)) + iF++);
         }
+        iF--;
 
         (i == 0 ? lenF : lenG) = iF;
         (*(fs+i))->close();
@@ -94,8 +67,8 @@ int main() {
         cout << "Считан массив (" << iF << " элементов): " << endl << "[";
         result << "Считан массив (" << iF << " элементов): " << endl << "[";
         for (unsigned int m = 0; m < iF; m++) {
-            cout << ' ' << *((**(bufs+i))+m);
-            result << ' ' << *((**(bufs+i))+m);
+            cout << ' ' << *((**(arrays+i))+m);
+            result << ' ' << *((**(arrays+i))+m);
         }
         cout << " ]" << endl;
         result << " ]" << endl;
@@ -121,6 +94,10 @@ int main() {
     }
 
     for (i = 0; i < iH; i++) result << *(H+i) << ' ';
+
+    delete[] H;
+    delete[] F;
+    delete[] G;
 
 EXIT:
     result.close();
