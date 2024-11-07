@@ -90,7 +90,22 @@ float **ReadFile(istream *f, uint size_a, uint size_b) {
     return read_matrix;
 }
 
+float Process(float **matrix, uint size_a, uint size_b, uint *mk) {
+    static float max_value = -HUGE_VALF;
+    for (uint i = 0; i < size_a; i++) {
+        for (uint j = 0; j < size_b; j++) {
+            if (
+                (
+                    (i >= mk[0] and i <= mk[1]) 
+                    or (j >= mk[0] and j <= mk[1])
+                )
+                and max_value < matrix[i][j]
+            ) max_value = matrix[i][j];
+        }
+    }
 
+    return max_value;
+}
 
 int main() {
     char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
@@ -131,9 +146,8 @@ int main() {
     }
 
     Out1(A, N, N, &result);
-
-
-
+    Out2(Process(A, N, N, mk), &cout);
+    Out2(Process(A, N, N, mk), &result);
     // process
     // out2 - отправка ответа на задание 
 
