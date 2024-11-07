@@ -17,15 +17,17 @@ void Out1(float **A, uint size_a, uint size_b, ostream *f) {
 uint *ReadMK(ifstream *f) {
     static uint r[2];
 
-    f->seekg(0, f->beg);
+    f->clear();
+    f->seekg(0, ios::beg);
     *f >> r[0] >> r[1];
     *f >> noskipws;
     int ch;
     if (static_cast<char>((ch = f->get())) != '\n') {
         cout << "ERR: Ошибка чтения параметров m и k\n"
-        << r[0] << ' ' << r[1] << ' ' << static_cast<char>(ch);
+        << r[0] << ' ' << r[1];
         return 0;
     }
+    *f >> skipws;
     if (r[0] > r[1]) {
         cout << "ERR: m не может быть больше k\n";
         return 0;
@@ -100,7 +102,6 @@ int main() {
 
     cout << "Расчёт файла: ";
     uint size = CalcSize(&f);
-
     cout << "Реальный размер матрицы: " << size << '\n';
 
     if (mk[1] >= size) {
@@ -116,7 +117,6 @@ int main() {
 
     ofstream result;
     result.open("result.txt", ios::out);
-
     Out1(A, size, size, &result);
 
 
