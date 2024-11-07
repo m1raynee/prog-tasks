@@ -10,6 +10,7 @@ void __OutAi(ostream *f, float *A, uint size_b) {
     for (uint i = 0; i < size_b; i++) {*f << A[i] << '\t';}
     *f << '\n';
 }
+
 void Out1(float **A, uint size_a, uint size_b, ostream *f) {
     for (uint i = 0; i < size_a; i++) {__OutAi(f, A[i], size_b);}
 }
@@ -69,20 +70,22 @@ float **ReadFile(ifstream *f, uint size_a, uint size_b) {
     ReadMK(f);
 
     char s;
-    static float **A = new float*[size_a];
+    static float **read_matrix = new float*[size_a];
 
     for (uint i = 0; i < size_a; i++) {
         s = '!';
 
-        A[i] = new float[size_b];
-        for (uint j = 0; j < size_b; j++) *f >> A[i][j];
+        read_matrix[i] = new float[size_b];
+        for (uint j = 0; j < size_b; j++) *f >> read_matrix[i][j];
 
         *f >> noskipws;
         while (!f->eof() and s != '\n') *f >> s;
         *f >> skipws;
     }
-    return A;
+    return read_matrix;
 }
+
+
 
 int main() {
     char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
@@ -101,23 +104,29 @@ int main() {
     }
 
     cout << "Расчёт файла: ";
-    uint size = CalcSize(&f);
-    cout << "Реальный размер матрицы: " << size << '\n';
+    uint N = CalcSize(&f);
+    cout << "Реальный размер матрицы: " << N << '\n';
 
-    if (mk[1] >= size) {
-        cout << "ERR: Параметр m=" << mk[1]
+    if (mk[1] >= N) {
+        cout << "ERR: Параметр k=" << mk[1]
         << " не может быть больше размера матрицы.\n";
     }
 
-    float **A = ReadFile(&f, size, size);
+    float **A = ReadFile(&f, N, N);
     f.close();
 
     cout << "\n\n\n";
-    Out1(A, size, size, &cout);
+    Out1(A, N, N, &cout);
 
     ofstream result;
     result.open("result.txt", ios::out);
-    Out1(A, size, size, &result);
+    if (!f.is_open()) {
+        cout << "ERR: Файл не открылся\n";
+        return 0;
+    }
+
+    Out1(A, N, N, &result);
+
 
 
     // process
