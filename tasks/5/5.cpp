@@ -7,33 +7,45 @@ using namespace std;
 
 typedef unsigned int uint;
 
-void __OutAi(ostream *f, float *A, uint size_b) {
-    for (uint i = 0; i < size_b; i++) {*f << A[i] << '\t';}
-    *f << '\n';
+void __OutAi(ostream *out, float *A, uint size_b) {
+    for (uint i = 0; i < size_b; i++) {*out << A[i] << "\t|";}
+    *out << '\n';
 }
 
-void Out1(float **A, uint size_a, uint size_b, ostream *f) {
-    for (uint i = 0; i < size_a; i++) {__OutAi(f, A[i], size_b);}
+void Out1(float **A, uint size_a, uint size_b, ostream *out) {
+    *out << "*\t|";
+    for (uint i = 0; i < size_a; i++) {
+        *out << i << "\t|";
+    }
+    *out << "\n-\t|";
+    for (uint i = 0; i < size_a; i++) {
+        *out << "\t|";
+    }
+    *out << '\n';
+    for (uint i = 0; i < size_a; i++) {
+        *out << i << "\t|";
+        __OutAi(out, A[i], size_b);}
 }
 
-void Out2(float result, ostream *f) {
-    *f << "Максимальное число в заданной области: " << result << '\n';
+void Out2(float result, int *mk, ostream *out) {
+    *out << "Максимальное число в заданной области: " << result << '\n'
+    << "m=" << mk[0] << " k=" << mk[1] << '\n';
 }
 
-uint *ReadMK(istream *f) {
-    static uint r[2];
+int *ReadMK(istream *in) {
+    static int r[2];
 
-    f->clear();
-    f->seekg(0, ios::beg);
-    *f >> r[0] >> r[1];
-    *f >> noskipws;
+    in->clear();
+    in->seekg(0, ios::beg);
+    *in >> r[0] >> r[1];
+    *in >> noskipws;
     int ch;
-    if (static_cast<char>((ch = f->get())) != '\n') {
+    if (static_cast<char>((ch = in->get())) != '\n') {
         cout << "ERR: Ошибка чтения параметров m и k\n"
         << r[0] << ' ' << r[1];
         return 0;
     }
-    *f >> skipws;
+    *in >> skipws;
     if (r[0] > r[1]) {
         cout << "ERR: m не может быть больше k\n";
         return 0;
@@ -42,18 +54,18 @@ uint *ReadMK(istream *f) {
     return r;
 }
 
-uint CalcSize(istream *f) {
+uint CalcSize(istream *in) {
     char s;
     uint size[2]{0, 0};
     uint tmp_size = 0;
-    *f >> noskipws;
+    *in >> noskipws;
 
-    while (!f->eof()) {
+    while (!in->eof()) {
         do {
-            *f >> s;
+            *in >> s;
         } while (s != '\t' and s != '\n');
 
-        if (!f->eof()) {
+        if (!in->eof()) {
             tmp_size++;
 
             if (s == '\n') {
@@ -65,14 +77,14 @@ uint CalcSize(istream *f) {
             }
         }
     }
-    *f >> skipws;
+    *in >> skipws;
 
     if (size[0] > size[1]) return size[1];
     else return size[0];
 }
 
-float **ReadFile(istream *f, uint size_a, uint size_b) {
-    ReadMK(f);
+float **ReadFile(istream *in, uint size_a, uint size_b) {
+    ReadMK(in);
 
     char s;
     static float **read_matrix = new float*[size_a];
@@ -81,16 +93,16 @@ float **ReadFile(istream *f, uint size_a, uint size_b) {
         s = '!';
 
         read_matrix[i] = new float[size_b];
-        for (uint j = 0; j < size_b; j++) *f >> read_matrix[i][j];
+        for (uint j = 0; j < size_b; j++) *in >> read_matrix[i][j];
 
-        *f >> noskipws;
-        while (!f->eof() and s != '\n') *f >> s;
-        *f >> skipws;
+        *in >> noskipws;
+        while (!in->eof() and s != '\n') *in >> s;
+        *in >> skipws;
     }
     return read_matrix;
 }
 
-float Process(float **matrix, uint size_a, uint size_b, uint *mk) {
+float Process(float **matrix, uint size_a, uint size_b, int *mk) {
     static float max_value = -HUGE_VALF;
     for (uint i = 0; i < size_a; i++) {
         for (uint j = 0; j < size_b; j++) {
@@ -111,14 +123,16 @@ int main() {
     char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
 
     ifstream f;
+    ofstream result;
     f.open(name);
+    result.open("result.txt");
 
-    if (!f.is_open()) {
+    if (!(f.is_open() and result.is_open())) {
         cout << "ERR: Файл не открылся\n";
         return 0;
     }
 
-    uint *mk = ReadMK(&f);
+    int *mk = ReadMK(&f);
     if (mk[0] == 0) {
         return 0;
     }
@@ -127,29 +141,19 @@ int main() {
     uint N = CalcSize(&f);
     cout << "Реальный размер матрицы: " << N << '\n';
 
-    if (mk[1] >= N) {
-        cout << "ERR: Параметр k=" << mk[1]
-        << " не может быть больше размера матрицы.\n";
+    if (N == 0) {
+        cout << "ERR: считан нулевой размер.\n";
+        return 0;
     }
 
     float **A = ReadFile(&f, N, N);
     f.close();
 
-    cout << "\n\n\n";
     Out1(A, N, N, &cout);
-
-    ofstream result;
-    result.open("result.txt", ios::out);
-    if (!f.is_open()) {
-        cout << "ERR: Файл не открылся\n";
-        return 0;
-    }
-
     Out1(A, N, N, &result);
-    Out2(Process(A, N, N, mk), &cout);
-    Out2(Process(A, N, N, mk), &result);
-    // process
-    // out2 - отправка ответа на задание 
+
+    Out2(Process(A, N, N, mk), mk, &cout);
+    Out2(Process(A, N, N, mk), mk, &result);
 
     return 0;
 }
