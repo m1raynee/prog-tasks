@@ -7,6 +7,54 @@ using namespace std;
 
 typedef unsigned int uint;
 
+void __OutAi(ostream *out, float *A, uint size_b);
+void Out1(float **A, uint size_a, uint size_b, ostream *out);
+void Out2(float result, int *mk, ostream *out);
+int *ReadMK(istream *in);
+uint CalcSize(istream *in);
+float **ReadFile(istream *in, uint size_a, uint size_b);
+float Process(float **matrix, uint size_a, uint size_b, int *mk);
+
+
+int main() {
+    char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
+
+    ifstream f;
+    ofstream result;
+    f.open(name);
+    result.open("result.txt");
+
+    if (!(f.is_open() and result.is_open())) {
+        cout << "ERR: Файл не открылся\n";
+        return 0;
+    }
+
+    int *mk = ReadMK(&f);
+    if (mk[0] == 0) {
+        return 0;
+    }
+
+    cout << "Расчёт файла: ";
+    uint N = CalcSize(&f);
+    cout << "Реальный размер матрицы: " << N << '\n';
+
+    if (N == 0) {
+        cout << "ERR: считан нулевой размер.\n";
+        return 0;
+    }
+
+    float **A = ReadFile(&f, N, N);
+    f.close();
+
+    Out1(A, N, N, &cout);
+    Out1(A, N, N, &result);
+
+    Out2(Process(A, N, N, mk), mk, &cout);
+    Out2(Process(A, N, N, mk), mk, &result);
+
+    return 0;
+}
+
 void __OutAi(ostream *out, float *A, uint size_b) {
     for (uint i = 0; i < size_b; i++) {*out << A[i] << "\t|";}
     *out << '\n';
@@ -117,43 +165,4 @@ float Process(float **matrix, uint size_a, uint size_b, int *mk) {
     }
 
     return max_value;
-}
-
-int main() {
-    char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
-
-    ifstream f;
-    ofstream result;
-    f.open(name);
-    result.open("result.txt");
-
-    if (!(f.is_open() and result.is_open())) {
-        cout << "ERR: Файл не открылся\n";
-        return 0;
-    }
-
-    int *mk = ReadMK(&f);
-    if (mk[0] == 0) {
-        return 0;
-    }
-
-    cout << "Расчёт файла: ";
-    uint N = CalcSize(&f);
-    cout << "Реальный размер матрицы: " << N << '\n';
-
-    if (N == 0) {
-        cout << "ERR: считан нулевой размер.\n";
-        return 0;
-    }
-
-    float **A = ReadFile(&f, N, N);
-    f.close();
-
-    Out1(A, N, N, &cout);
-    Out1(A, N, N, &result);
-
-    Out2(Process(A, N, N, mk), mk, &cout);
-    Out2(Process(A, N, N, mk), mk, &result);
-
-    return 0;
 }
