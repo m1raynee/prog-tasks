@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cmath>
 
 using namespace std;
 
@@ -15,7 +16,11 @@ void Out1(float **A, uint size_a, uint size_b, ostream *f) {
     for (uint i = 0; i < size_a; i++) {__OutAi(f, A[i], size_b);}
 }
 
-uint *ReadMK(ifstream *f) {
+void Out2(float result, ostream *f) {
+    *f << "Максимальное число в заданной области: " << result << '\n';
+}
+
+uint *ReadMK(istream *f) {
     static uint r[2];
 
     f->clear();
@@ -37,7 +42,7 @@ uint *ReadMK(ifstream *f) {
     return r;
 }
 
-uint CalcSize(ifstream *f) {
+uint CalcSize(istream *f) {
     char s;
     uint size[2]{0, 0};
     uint tmp_size = 0;
@@ -66,7 +71,7 @@ uint CalcSize(ifstream *f) {
     else return size[0];
 }
 
-float **ReadFile(ifstream *f, uint size_a, uint size_b) {
+float **ReadFile(istream *f, uint size_a, uint size_b) {
     ReadMK(f);
 
     char s;
