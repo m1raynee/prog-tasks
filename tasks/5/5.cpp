@@ -6,17 +6,37 @@ using namespace std;
 
 typedef unsigned int uint;
 
-void __OutAi(ostream *f, float *A, uint b) {
-    for (uint i = 0; i < b; i++) {*f << A[i] << '\t';}
+void __OutAi(ostream *f, float *A, uint size_b) {
+    for (uint i = 0; i < size_b; i++) {*f << A[i] << '\t';}
     *f << '\n';
 }
-void Out1(float **A, uint *size, ostream *f) {
-    for (uint i = 0; i < size[0]; i++) {__OutAi(f, A[i], size[1]);}
+void Out1(float **A, uint size_a, uint size_b, ostream *f) {
+    for (uint i = 0; i < size_a; i++) {__OutAi(f, A[i], size_b);}
 }
-uint *CalcSize(ifstream *f) {
-    float tmp;
-    char s;// = ' ';
-    static uint size[2]{0, 0};  // TODO: ограницение
+
+uint *ReadMK(ifstream *f) {
+    static uint r[2];
+
+    f->seekg(0, f->beg);
+    *f >> r[0] >> r[1];
+    *f >> noskipws;
+    int ch;
+    if (static_cast<char>((ch = f->get())) != '\n') {
+        cout << "ERR: Ошибка чтения параметров m и k\n"
+        << r[0] << ' ' << r[1] << ' ' << static_cast<char>(ch);
+        return 0;
+    }
+    if (r[0] > r[1]) {
+        cout << "ERR: m не может быть больше k\n";
+        return 0;
+    }
+    cout << "Считаны параметры: m=" << r[0] << ", k=" << r[1] << "\n";
+    return r;
+}
+
+uint CalcSize(ifstream *f) {
+    char s;
+    uint size[2]{0, 0};
     uint tmp_size = 0;
     *f >> noskipws;
 
@@ -38,17 +58,22 @@ uint *CalcSize(ifstream *f) {
         }
     }
     *f >> skipws;
-    return size;
+
+    if (size[0] > size[1]) return size[1];
+    else return size[0];
 }
 
-float **ReadFile(ifstream *f, uint *size) {
+float **ReadFile(ifstream *f, uint size_a, uint size_b) {
+    ReadMK(f);
+
     char s;
-    static float **A = new float*[size[0]];
-    for (uint i = 0; i < size[0]; i++) {
+    static float **A = new float*[size_a];
+
+    for (uint i = 0; i < size_a; i++) {
         s = '!';
 
-        A[i] = new float[size[1]];
-        for (uint j = 0; j < size[1]; j++) *f >> A[i][j];
+        A[i] = new float[size_b];
+        for (uint j = 0; j < size_b; j++) *f >> A[i][j];
 
         *f >> noskipws;
         while (!f->eof() and s != '\n') *f >> s;
@@ -59,43 +84,42 @@ float **ReadFile(ifstream *f, uint *size) {
 
 int main() {
     char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
+
     ifstream f;
     f.open(name);
+
     if (!f.is_open()) {
         cout << "ERR: Файл не открылся\n";
         return 0;
     }
 
-    // ничего лишнего
+    uint *mk = ReadMK(&f);
+    if (mk[0] == 0) {
+        return 0;
+    }
 
-    // обращение к функциям:
-    // calc_size
     cout << "Расчёт файла: ";
-    uint *size = CalcSize(&f);
-    f.close();
-    uint real_size;
-    if (size[0] > size[1]) real_size = size[1];
-    else real_size = size[0];
+    uint size = CalcSize(&f);
 
-    cout << "Реальный размер матрицы: " << real_size << '\n';
+    cout << "Реальный размер матрицы: " << size << '\n';
 
-    f.open(name);
-    if (!f.is_open()) {
-        cout << "ERR: Файл не открылся\n";
-        return 0;
+    if (mk[1] >= size) {
+        cout << "ERR: Параметр m=" << mk[1]
+        << " не может быть больше размера матрицы.\n";
     }
-    // <- f ->
-    // input
-    float **A = ReadFile(&f, size);
+
+    float **A = ReadFile(&f, size, size);
     f.close();
+
     cout << "\n\n\n";
+    Out1(A, size, size, &cout);
 
-    // out1 - отправка сформированного массива
+    ofstream result;
+    result.open("result.txt", ios::out);
 
-    // fstream result;
-    // result.open("result.txt", ios::out);
+    Out1(A, size, size, &result);
 
-    Out1(A, size, &cout);
+
     // process
     // out2 - отправка ответа на задание 
 
