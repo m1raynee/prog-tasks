@@ -18,7 +18,7 @@ float Process(float **matrix, uint size_a, uint size_b, int *mk);
 
 
 int main() {
-    char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/1.txt";
+    char name[] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/1.txt";
 
     ifstream f;
     ofstream result_stream;
@@ -41,7 +41,10 @@ int main() {
     uint N = CalcSize(&f);
     cout << "реальный размер матрицы: " << N << '\n';
 
-    if (N > mk[2]) {
+    if (mk[2] < 0) {
+        cout << "Заявленный размер матрицы отрицателен, используем считанный\n";
+    }
+    else if (N > mk[2]) {
         cout << "Считанный размер больше заявленного, используем заявленный\n";
         N = mk[2];
     }
