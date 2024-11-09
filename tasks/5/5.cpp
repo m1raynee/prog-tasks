@@ -11,13 +11,14 @@ void __OutAi(ostream *out, float *A, uint size_b);
 void Out1(float **A, uint size_a, uint size_b, ostream *out);
 void Out2(float result, int *mk, ostream *out);
 int *ReadMK(istream *in);
+bool CatchReadMK(istream *in, int *r);
 uint CalcSize(istream *in);
 float **ReadFile(istream *in, uint size_a, uint size_b);
 float Process(float **matrix, uint size_a, uint size_b, int *mk);
 
 
 int main() {
-    char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/0.txt";
+    char name[100] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/1.txt";
 
     ifstream f;
     ofstream result_stream;
@@ -30,17 +31,23 @@ int main() {
     }
 
     int *mk = ReadMK(&f);
-    if (mk[0] == 0) {
+    if (!CatchReadMK(&f, mk)) {
         return 0;
     }
+    cout << "Считаны параметры: m=" << mk[0] << ", k="
+    << mk[1] << ", N=" << mk[2] << '\n';
 
-    cout << "Расчёт файла: ";
+    cout << "Расчёт файла, ";
     uint N = CalcSize(&f);
-    cout << "Реальный размер матрицы: " << N << '\n';
+    cout << "реальный размер матрицы: " << N << '\n';
 
     if (N == 0) {
         cout << "ERR: считан нулевой размер.\n";
         return 0;
+    }
+    if (N > mk[2]) {
+        cout << "Считанный размер больше заявленного, используем заявленный\n";
+        N = mk[2];
     }
 
     float **A = ReadFile(&f, N, N);
@@ -92,25 +99,28 @@ void Out2(float result, int *mk, ostream *out) {
 }
 
 int *ReadMK(istream *in) {
-    static int r[2];
+    static int r[3];
 
     in->clear();
     in->seekg(0, ios::beg);
-    *in >> r[0] >> r[1];
+    *in >> r[0] >> r[1] >> r[2];
+    return r;
+}
+
+bool CatchReadMK(istream *in, int *r) {
     *in >> noskipws;
     int ch;
     if (static_cast<char>((ch = in->get())) != '\n') {
         cout << "ERR: Ошибка чтения параметров m и k\n"
         << r[0] << ' ' << r[1];
-        return 0;
+        return false;
     }
     *in >> skipws;
     if (r[0] > r[1]) {
         cout << "ERR: m не может быть больше k\n";
-        return 0;
+        return false;
     }
-    cout << "Считаны параметры: m=" << r[0] << ", k=" << r[1] << "\n";
-    return r;
+    return true;
 }
 
 uint CalcSize(istream *in) {
