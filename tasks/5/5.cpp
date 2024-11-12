@@ -17,12 +17,10 @@ float **ReadFile(istream *in, uint size_a, uint size_b);
 float Process(float **matrix, uint size_a, uint size_b, int *mk);
 
 
-int main() {
-    char name[] = "C:/Users/peche/OneDrive/Документы/Github/prog-tasks/tasks/5/1.txt";
-
+int main() { 
     ifstream f;
     ofstream result_stream;
-    f.open(name);
+    f.open("1.txt");
     result_stream.open("result.txt");
 
     if (!(f.is_open() and result_stream.is_open())) {
@@ -62,6 +60,11 @@ int main() {
     float result_value = Process(A, N, N, mk);
     Out2(result_value, mk, &cout);
     Out2(result_value, mk, &result_stream);
+
+    for (int i = 0; i < N; ++i) {
+        delete[] A[i];
+    }
+    delete[] A;
 
     return 0;
 }
@@ -142,6 +145,7 @@ uint CalcSize(istream *in) {
 
             if (s == '\n') {
                 if (size[1] > tmp_size or size[0] == 0) {
+                    if (size[0] > tmp_size) break;
                     size[1] = tmp_size;
                 }
                 tmp_size = 0;
