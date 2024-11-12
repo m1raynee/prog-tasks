@@ -28,17 +28,12 @@ int main() {
     char file_chars[] = "FG";
     unsigned int i = 0, len, lenF = 0, lenG = 0, iF = 0, iG = 0, iH = 0;
 
-    result.open("result.txt", ios::out);
-    if (!result.is_open()) {
-        cout << "Не удалось открыть выходной файл." << endl;
-        goto EXIT;
-    }
-
     fF.open("prF", ios::in);
     fG.open("prG", ios::in);
+    result.open("result.txt", ios::out);
 
-    if (!(fF.is_open() and fG.is_open())) {
-        cout << "Ошибка, не удалось открыть один из входных файлов." << endl;
+    if (!(result.is_open() and fF.is_open() and fG.is_open())) {
+        cout << "Ошибка, не удалось открыть один из файлов." << endl;
         goto EXIT;
     }
 

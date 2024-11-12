@@ -21,6 +21,7 @@ int main() {
     cout << "Автор: Егор Даричев (гр. 4352)   Версия: 4.1.15" << endl;
 
     fstream fF, fG;
+    fstream result;
     fstream* cur_file;
 
     float F[BUFFER_SIZE], G[BUFFER_SIZE];
@@ -31,17 +32,10 @@ int main() {
 
     unsigned int i = 0, len, lenF = 0, lenG = 0, iF = 0, iG = 0, iH = 0;
 
-    fstream result;
     result.open("result.txt", ios::out);
-    if (!result.is_open()) {
-        cout << "Ошибка, не удалось открыть выходной файл." << endl;
-        goto EXIT;
-    }
-
     fF.open("prF", ios::in);
     fG.open("prG", ios::in);
-
-    if (!(fF.is_open() and fG.is_open())) {
+    if (!(result.is_open() and fF.is_open() and fG.is_open())) {
         cout << "Ошибка, не удалось открыть один из входных файлов." << endl;
         goto EXIT;
     }
@@ -65,10 +59,7 @@ int main() {
         }
 
         while (iF < len and iF < BUFFER_SIZE) {
-            if (cur_file->eof()) {
-                iF--;
-                break;
-            }
+            if (cur_file->eof()) break;
             *cur_file >> cur_array[iF++];
         }
 
