@@ -5,6 +5,7 @@
 
 using std::istream, std::ifstream, std::ofstream, std::ostream;
 using std::noskipws, std::skipws, std::setw, std::endl;
+using std::tgamma;
 
 
 double EPS = 1e-6;
@@ -154,7 +155,7 @@ double **readFile(ostream &protocol, istream &in, unsigned counts[]) {
 }
 
 bool equals(double v1, double v2, double eps = EPS) {return abs(v1 - v2) < eps;}
-unsigned factorial(unsigned v) {return (unsigned)std::tgamma(v+1);}
+unsigned factorial(unsigned v) {return (unsigned)tgamma(v+1);}
 unsigned maxLineCount(unsigned point_v) {return (point_v)*(point_v-1)/(2);}
 
 // vector normalization
