@@ -7,7 +7,7 @@ using namespace std;
 
 typedef unsigned int uint;
 
-void __OutAi(ostream *out, float *A, uint size_b);
+void OutAi(ostream *out, float *A, uint size_b);
 void Out1(float **A, uint size_a, uint size_b, ostream *out);
 void Out2(float result, int *mk, ostream *out);
 int *ReadMK(istream *in);
@@ -70,7 +70,7 @@ int main() {
 }
 
 
-void __OutAi(ostream *out, float *A, uint size_b) {
+void OutAi(ostream *out, float *A, uint size_b) {
     for (uint i = 0; i < size_b; i++) {*out << A[i] << "\t|";}
     *out << '\n';
 }
@@ -87,7 +87,7 @@ void Out1(float **A, uint size_a, uint size_b, ostream *out) {
     *out << '\n';
     for (uint i = 0; i < size_a; i++) {
         *out << i << "\t|";
-        __OutAi(out, A[i], size_b);}
+        OutAi(out, A[i], size_b);}
 }
 
 void Out2(float result, int *mk, ostream *out) {
