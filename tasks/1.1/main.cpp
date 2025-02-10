@@ -152,5 +152,7 @@ int main() {
     for (unsigned i = 0; i < string_count; ++i) {
         strings[i].process();
         strings[i].print_to(std::cout);
+        delete [] strings[i].symbols;
     }
+    delete [] strings;
 }
