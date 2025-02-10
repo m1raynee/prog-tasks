@@ -144,10 +144,25 @@ str *input2(istream &in, unsigned *v) {
 
 int main() {
     ifstream in;
-    in.open("in.txt");
-
+    str *strings;
     unsigned string_count = 0;
-    str *strings = input1(in, &string_count);
+
+    std::cout << "Введите номер варианта: ";
+    switch (std::cin.get())
+    {
+    case '1':
+        in.open("in1.txt");
+        strings = input1(in, &string_count);
+        break;
+    case '2':
+        in.open("in2.txt");
+        strings = input2(in, &string_count);
+        break;
+
+    default:
+        std::cout << "Неверный номер варианта" << endl;
+        return 0;
+    }
 
     for (unsigned i = 0; i < string_count; ++i) {
         strings[i].process();
