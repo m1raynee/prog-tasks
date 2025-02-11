@@ -61,13 +61,10 @@ str *input1(istream &in, unsigned *v) {
     int ch;
     str *strings = (str *)malloc(*v * sizeof(str));
 
-    in >> noskipws;
     in >> delimeter >> mark;
     while ((ch = in.get()) and ch != '\n' and ch != -1);
 
-    if (in.eof()) {
-        exit(1);
-    }
+    if (in.eof()) exit(1);
 
     while (!in.eof()) {
         unsigned size = 0;
@@ -80,7 +77,6 @@ str *input1(istream &in, unsigned *v) {
 
         while ((ch = in.get()) and ch != '\n' and ch != -1) {
             if (delimeter_pos != -1) continue;
-            if (l.symbols == NULL) exit(2);
             if (ch == delimeter and delimeter_pos == -1) {
                 delimeter_pos = size;
                 continue;
@@ -108,7 +104,6 @@ str *input2(istream &in, unsigned *v) {
     int ch;
     str *strings = (str *)malloc(*v * sizeof(str));
 
-    in >> noskipws;
     in >> mark;
     while ((ch = in.get()) and ch != '\n' and ch != -1);
 
@@ -144,10 +139,13 @@ str *input2(istream &in, unsigned *v) {
 
 int main() {
     ifstream in;
+    ofstream out;
     str *strings;
     unsigned string_count = 0;
 
-    std::cout << "Введите номер варианта: ";
+    std::cout << "Задание: Преобразовать заданную строку следующим образом: каждую точку заменить многоточием\n"
+              << "Даричев Егор а.г. 4352\n"
+              << "Введите номер варианта ввода: ";
     switch (std::cin.get())
     {
     case '1':
@@ -164,9 +162,24 @@ int main() {
         return 0;
     }
 
+    if (!in.is_open()) {
+        std::cout << "Не удалось открыть файл ввода" << endl;
+        return 0;
+    }
+
+    out.open("out.txt");
+    if (!out.is_open()) {
+        std::cout << "Не удалось открыть файл вывода" << endl;
+        return 0;
+    }
+
+    in >> noskipws;
+
+    std::cout << "Вывод результата в консоль и выходной файл:" << endl;
     for (unsigned i = 0; i < string_count; ++i) {
         strings[i].process();
         strings[i].print_to(std::cout);
+        strings[i].print_to(out);
         delete [] strings[i].symbols;
     }
     delete [] strings;
