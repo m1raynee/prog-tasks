@@ -41,11 +41,10 @@ struct str {
         this->symbols = new_symbols;
     }
 
-    void print_to(ostream &out, bool show_mark = true, bool newline = true) {
+    void print_to(ostream &out) {
         unsigned i = 0;
         while (this->next(i)) out << this->symbols[i++];
-        if (show_mark) out << this->symbols[i];
-        if (newline) out << endl;
+        out << this->symbols[i] << endl;
     }
 
     void put(char ch, unsigned *at) {
@@ -63,8 +62,6 @@ str *input1(istream &in, unsigned *v) {
 
     in >> delimeter >> mark;
     while ((ch = in.get()) and ch != '\n' and ch != -1);
-
-    if (in.eof()) exit(1);
 
     while (!in.eof()) {
         unsigned size = 0;
@@ -94,7 +91,6 @@ str *input1(istream &in, unsigned *v) {
         strings[(*v)++] = l;
     }
 
-    std::cout << endl;
     return strings;
 }
 
@@ -107,10 +103,6 @@ str *input2(istream &in, unsigned *v) {
     in >> mark;
     while ((ch = in.get()) and ch != '\n' and ch != -1);
 
-    if (in.eof()) {
-        exit(1);
-    }
-
     while (!in.eof()) {
         unsigned size = 0;
         int mark_pos = -1;
@@ -120,7 +112,6 @@ str *input2(istream &in, unsigned *v) {
         l.mark = mark;
 
         while ((ch = in.get()) and ch != '\n' and ch != -1) {
-            if (l.symbols == NULL) exit(2);
             if (ch == mark and mark_pos == -1) mark_pos = size;
             l.put((char)ch, &size);
         }
