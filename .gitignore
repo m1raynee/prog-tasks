@@ -38,3 +38,6 @@
 *.log
 *.aux
 *.pdf
+
+out.txt
+protocol.txt
