@@ -8,47 +8,48 @@ using std::istream, std::ifstream, std::ofstream, std::ostream;
 using std::noskipws;
 using std::endl;
 
-class StringLen {
+class StringMark {
     public:
-        // Constructors
-        StringLen()
-            : _text(nullptr), _len(0), _buffer_size(0) {};
+        // Null constructor
+        StringMark() : _text(nullptr), _len(0) {};
 
-        StringLen(char* t, unsigned bs, unsigned l) : _text(new char[bs]{}), _len(l), _buffer_size(bs) {
-            for (unsigned i = 0; i < bs; ++i) {
+        // Rich constructor
+        StringMark(char* t, unsigned l) : _text(new char[l]{}), _len(l) {
+            for (unsigned i = 0; i < l; ++i) {
                 _text[i] = t[i];
             }
         }
+
         // I. Destructor
-        ~StringLen() { std::cout << "destructor called, len=" << _len << endl; delete [] _text; }
+        ~StringMark() { delete [] _text; }
 
         // II. copy constructor
-        StringLen(const StringLen& other)
-            : StringLen(other._text, other._buffer_size, other._len) {
-                std::cout << "copy constructor called, on len=" << _len << " other len=" << other._len << endl;
-            }
+        StringMark(const StringMark& other)
+            : StringMark(other._text, other._len) {}
 
-            StringLen& operator=(const StringLen& other) {
-                // III. copy assignment
-                // implemented through copy-and-swap for brevity
-                // note that this prevents potential storage reuse
-            std::cout << "copy assignment called, on len=" << _len << " other len=" << other._len << endl;
-            StringLen temp(other);
+        // III. copy assignment
+        StringMark& operator=(const StringMark& other) {
+            StringMark temp(other);
             std::swap(_text, temp._text);
             std::swap(_len, temp._len);
-            std::swap(_buffer_size, temp._buffer_size);
             return *this;
         }
+
+        // Make task
         void process();
-        void out(ostream&);
+
+        // Print to the stream
+        void print(ostream&);
+
+        // Access
+        char* text_str() { return _text; }
 
     private:
         char* _text;
         unsigned _len;
-        unsigned _buffer_size;
 };
 
-void StringLen::process() {
+void StringMark::process() {
     unsigned j = 0, dots_count = 0;
     char *new_text;
 
@@ -69,28 +70,97 @@ void StringLen::process() {
     _len = j;
 }
 
-void StringLen::out(ostream& o) {
+void StringMark::print(ostream& o) {
     for (unsigned i = 0; i < _len; ++i) o << _text[i];
+    if (_len == 0) o << "(пустая строка)";
     o << endl;
 }
 
-// StringLen* input1(istream& in, unsigned* len) {
-//     StringLen* result;
+StringMark* input(istream& in, unsigned* len, char *delim) {
+    StringMark* result;
+    int ch;
+    char d = *delim;
 
-//     return result;
-// }
+
+    unsigned str_count = 1;
+
+    while ((ch = in.get()) and ch != '\n' and ch != -1);
+    while ((ch = in.get()) and ch != -1) if (ch == '\n') ++str_count;
+
+    result = new StringMark[str_count];
+
+    in.clear(); in.seekg(0);
+
+    if (d == '\0') in >> d;
+    while ((ch = in.get()) and ch != '\n' and ch != -1);
+
+    while (!in.eof()) {
+        unsigned char_count = 0;
+        char* text = (char*)calloc(char_count, sizeof(char));
+        bool d_found = false;
+
+        while (
+            (ch = in.get())
+            and ch != '\n'
+            and ch != -1
+        ) {
+            if (!d_found) {
+                if (ch == d) {
+                    d_found = true;
+                    continue;
+                }
+                text = (char*)realloc(text, char_count+1);
+                text[char_count++] = (char)ch;
+            }
+        }
+        // if (!d_found) text[char_count++] = d;
+
+        result[(*len)++] = StringMark(text, char_count);
+        delete [] text;
+    }
+
+    *(delim) = d;
+    return result;
+}
 
 int main() {
-    char* s1 = new char[3]{'1', '2', '.'};
-    char* s2 = new char[1]{'.'};
-    StringLen* ar = new StringLen[2]{};
+    ifstream in;
+    in.open("in.txt");
+    in >> noskipws;
 
-    ar[0] = StringLen(s1, 3, 3);
-    ar[1] = StringLen{s2, 1, 1};
+    ofstream out;
+    out.open("out.txt");
 
-    ar[0].out(std::cout);
-    ar[1].out(std::cout);
+    in >> noskipws;
+    std::cout << "Задание: Преобразовать заданную строку следующим образом: "
+    << "каждую точку заменить многоточием\nДаричев Егор а.г. 4352\n"
+    << "Введите номер варианта ввода: ";
 
-    delete [] ar;
+    StringMark* strings;
+    unsigned length = 0;
+    char delim = '\0';
+    switch (std::cin.get()) {
+    case '1':
+        break;
+    case '2':
+        delim = '\n';
+        break;
+    default:
+        std::cout << "Неверный номер варианта" << endl;
+        return 0;
+    }
+    strings = input(in, &length, &delim);
+
+    for (unsigned i = 0; i < length; ++i) {
+        out << "Строка No." << i+1 << ":\nСчитано:    ";
+        strings[i].print(out);
+
+        strings[i].process();
+        out << "Результат:  ";
+        strings[i].print(out);
+    }
+
+    delete [] strings;
+
     return 0;
 }
