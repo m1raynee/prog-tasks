@@ -8,28 +8,28 @@ using std::istream, std::ifstream, std::ofstream, std::ostream;
 using std::noskipws;
 using std::endl;
 
-class StringMark {
+class StringLen {
     public:
         // Null constructor
-        StringMark() : _text(nullptr), _len(0) {};
+        StringLen() : _text(nullptr), _len(0) {};
 
         // Rich constructor
-        StringMark(char* t, unsigned l) : _text(new char[l]{}), _len(l) {
+        StringLen(char* t, unsigned l) : _text(new char[l]{}), _len(l) {
             for (unsigned i = 0; i < l; ++i) {
                 _text[i] = t[i];
             }
         }
 
         // I. Destructor
-        ~StringMark() { delete [] _text; }
+        ~StringLen() { delete [] _text; }
 
         // II. copy constructor
-        StringMark(const StringMark& other)
-            : StringMark(other._text, other._len) {}
+        StringLen(const StringLen& other)
+            : StringLen(other._text, other._len) {}
 
         // III. copy assignment
-        StringMark& operator=(const StringMark& other) {
-            StringMark temp(other);
+        StringLen& operator=(const StringLen& other) {
+            StringLen temp(other);
             std::swap(_text, temp._text);
             std::swap(_len, temp._len);
             return *this;
@@ -49,7 +49,7 @@ class StringMark {
         unsigned _len;
 };
 
-void StringMark::process() {
+void StringLen::process() {
     unsigned j = 0, dots_count = 0;
     char *new_text;
 
@@ -70,14 +70,14 @@ void StringMark::process() {
     _len = j;
 }
 
-void StringMark::print(ostream& o) {
+void StringLen::print(ostream& o) {
     for (unsigned i = 0; i < _len; ++i) o << _text[i];
     if (_len == 0) o << "(пустая строка)";
     o << endl;
 }
 
-StringMark* input(istream& in, unsigned* len, char *delim) {
-    StringMark* result;
+StringLen* input(istream& in, unsigned* len, char *delim) {
+    StringLen* result;
     int ch;
     char d = *delim;
 
@@ -87,7 +87,7 @@ StringMark* input(istream& in, unsigned* len, char *delim) {
     while ((ch = in.get()) and ch != '\n' and ch != -1);
     while ((ch = in.get()) and ch != -1) if (ch == '\n') ++str_count;
 
-    result = new StringMark[str_count];
+    result = new StringLen[str_count];
 
     in.clear(); in.seekg(0);
 
@@ -115,7 +115,7 @@ StringMark* input(istream& in, unsigned* len, char *delim) {
         }
         // if (!d_found) text[char_count++] = d;
 
-        result[(*len)++] = StringMark(text, char_count);
+        result[(*len)++] = StringLen(text, char_count);
         delete [] text;
     }
 
@@ -136,7 +136,7 @@ int main() {
     << "каждую точку заменить многоточием\nДаричев Егор а.г. 4352\n"
     << "Введите номер варианта ввода: ";
 
-    StringMark* strings;
+    StringLen* strings;
     unsigned length = 0;
     char delim = '\0';
     switch (std::cin.get()) {
