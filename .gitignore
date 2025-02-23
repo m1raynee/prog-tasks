@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+/.vscode
+
+# LaTeX
+*.toc
+*.synctex.gz
+*.log
+*.aux
+*.pdf
+
+out.txt
+protocol.txt
