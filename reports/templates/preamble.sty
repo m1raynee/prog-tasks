@@ -1,0 +1,54 @@
+\ProvidesPackage{../templates/preamble}
+
+\usepackage{graphicx}
+\usepackage{titlesec}
+
+% Font & cyrillic glyphs
+\usepackage[english,russian]{babel}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setmonofont{Courier New}
+
+% Margins
+\usepackage[
+    top=10mm,
+    bottom=20mm,
+    left=10mm,
+    right=10mm
+]{geometry}
+
+% \usepackage{multicol}
+\usepackage{tabularx}
+\newcolumntype{H}{>{\hsize=.5\hsize}X}
+\newcolumntype{S}{>{\hsize=.25\hsize}X}
+\newcolumntype{s}{>{\centering\arraybackslash}S}
+\newcolumntype{h}{>{\centering\arraybackslash}H}
+\newcolumntype{t}{>{\ttfamily}H}
+
+\usepackage{xltabular}
+\usepackage{multirow}
+
+\usepackage{setspace}
+\setlength{\parindent}{0mm}  % Paragraph indent
+\setstretch{1}  % Line height
+
+\titleformat{\section}[hang]{\normalfont\bfseries}{\thesection}{1em}{}
+\titlespacing{\section}{0pt}{4pt}{0pt}
+\titleformat{\subsection}[hang]{\normalfont}{\thesubsection}{1em}{}
+\titlespacing{\subsection}{0pt}{4pt}{0pt}
+\titleformat{\subsubsection}[hang]{\normalfont}{\thesubsubsection}{1em}{}
+\titlespacing{\subsubsection}{0pt}{4pt}{0pt}
+
+
+\addto\captionsrussian{\renewcommand*\contentsname{ОГЛАВЛЕНИЕ}}
+
+\newcommand{\department}{САПР}
+\newcommand{\discipline}{Программирование}
+\newcommand{\typeof}{
+    ОТЧЁТ\par
+    по лабораторной работе №\typeofnum\par
+}
+\newcommand{\typeofnum}{НОМЕР}
+\newcommand{\papertheme}{ТЕМА}
+\newcommand{\teacher}{Калмычков В. А.}
+\newcommand{\yyear}{2025}
