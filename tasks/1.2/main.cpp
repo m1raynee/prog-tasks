@@ -41,9 +41,6 @@ class StringLen {
         // Print to the stream
         void print(ostream&);
 
-        // Access
-        char* text_str() { return _text; }
-
     private:
         char* _text;
         unsigned _len;
@@ -113,7 +110,6 @@ StringLen* input(istream& in, unsigned* len, char *delim) {
                 text[char_count++] = (char)ch;
             }
         }
-        // if (!d_found) text[char_count++] = d;
 
         result[(*len)++] = StringLen(text, char_count);
         delete [] text;
@@ -159,6 +155,7 @@ int main() {
         out << "Результат:  ";
         strings[i].print(out);
     }
+    std::cout << "Ответ записан в файле вывода" << endl;
 
     delete [] strings;
 

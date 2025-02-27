@@ -39,6 +39,30 @@
 \titleformat{\subsubsection}[hang]{\normalfont}{\thesubsubsection}{1em}{}
 \titlespacing{\subsubsection}{0pt}{4pt}{0pt}
 
+\newcounter{cnt}
+\newenvironment{listed}
+  {\begin{list}
+    {\arabic{cnt}}
+    {\usecounter{cnt}
+     \setlength{\leftmargin}{0em}
+     \setlength{\listparindent}{0em}
+     \setlength{\parsep}{0em}
+     \setlength{\itemindent}{1.5cm}
+     \setlength{\itemsep}{0em}
+     \setlength{\labelsep}{2em}
+    }
+  }
+{\end{list}}
+
+% Code related
+\usepackage{longtable}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  breaklines=true,
+  float=H,
+}
 
 \addto\captionsrussian{\renewcommand*\contentsname{ОГЛАВЛЕНИЕ}}
 
