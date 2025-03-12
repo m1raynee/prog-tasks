@@ -24,7 +24,6 @@ clean:
 	rm -rf $(BUILD_DIR)/*.o $(TARGET)
 
 $(BUILD_DIR)/%.o: $(MODS_DIR)/%.cpp
-	echo $@ $<
 	$(CC) $(CFLAGS) $< -o $@
 
 recompile: clean $(TARGET)
