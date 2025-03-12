@@ -9,22 +9,22 @@ class chunkL {
         chunkL();
 
         // Конструктор, создающий строку из указателя
-        chunkL(strL*, unsigned);
+        chunkL(strL* strings, unsigned count);
 
         // Деструктор
         ~chunkL();
 
         // Конструктор-копия
-        chunkL(const chunkL&);
+        chunkL(const chunkL& other);
 
         // Копирование через назначение
-        chunkL& operator=(const chunkL&);
+        chunkL& operator=(const chunkL& other);
 
         // Make task
         void process();
 
         // Отправить содержание чанка в поток
-        void print(std::ostream&);
+        void print(std::ostream& out);
 
     private:
         strL* textv;
