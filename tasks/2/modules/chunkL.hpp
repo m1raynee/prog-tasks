@@ -1,7 +1,7 @@
 #pragma once
 
-#include "const.h"
-#include "strL.h"
+#include "const.hpp"
+#include "strL.hpp"
 
 class chunkL {
     public:

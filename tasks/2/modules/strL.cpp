@@ -1,4 +1,4 @@
-#include "strL.h"
+#include "strL.hpp"
 
 strL::strL() : chv(nullptr), chc(0) {}
 strL::strL(char* t, unsigned l) : chv(new char[l]{}), chc(l)

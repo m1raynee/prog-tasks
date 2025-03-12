@@ -1,5 +1,5 @@
-#include "chunkL.h"
-#include "strL.h"
+#include "chunkL.hpp"
+#include "strL.hpp"
 
 chunkL::chunkL() {}
 chunkL::chunkL(strL* strv, unsigned strc) : textv(new strL[strc]{}), textc(strc)
