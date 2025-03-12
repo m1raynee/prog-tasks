@@ -1,10 +1,10 @@
 CC=g++
-CFLAGS=-Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0 -c
-LDFLAGS=-Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0
+CFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0 -c
+LDFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0
 BUILD_DIR=./build/Debug
 MODS_DIR=./modules
 
-MODS_NAMES=chunkL.cpp strL.cpp
+MODS_NAMES=chunkL.cpp strL.cpp files.cpp
 
 OBJS_NAMES = $(MODS_NAMES:.cpp=.o)
 OBJS=$(addprefix $(BUILD_DIR)/,$(OBJS_NAMES))
@@ -27,7 +27,11 @@ $(BUILD_DIR)/%.o: $(MODS_DIR)/%.cpp
 	echo $@ $<
 	$(CC) $(CFLAGS) $< -o $@
 
-run: clean $(TARGET)
+recompile: clean $(TARGET)
+
+run: $(TARGET)
 	cmd /d /c $(subst /,\,$(TARGET))
 
-.PHONY: all clean run
+rerun: recompile run
+
+.PHONY: all clean run rerun recompile
