@@ -1,29 +1,29 @@
 CC=g++
 CFLAGS=-Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0 -c
 LDFLAGS=-Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0
-DIR=./build/Debug
+BUILD_DIR=./build/Debug
 MODS_DIR=./modules
 
 MODS_NAMES=chunkL.cpp strL.cpp
 
 OBJS_NAMES = $(MODS_NAMES:.cpp=.o)
-OBJS=$(addprefix $(DIR)/,$(OBJS_NAMES))
+OBJS=$(addprefix $(BUILD_DIR)/,$(OBJS_NAMES))
 
 TARGET_NAME = outDebug.exe
-TARGET = $(DIR)/$(TARGET_NAME)
+TARGET = $(BUILD_DIR)/$(TARGET_NAME)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS) $(DIR)/main.o
+$(TARGET): $(OBJS) $(BUILD_DIR)/main.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
-$(DIR)/main.o: main.cpp
-	$(CC) $(CFLAGS) main.cpp -o $(DIR)/main.o
+$(BUILD_DIR)/main.o: main.cpp
+	$(CC) $(CFLAGS) main.cpp -o $(BUILD_DIR)/main.o
 
 clean:
-	rm -rf $(DIR)/*.o $(TARGET)
+	rm -rf $(BUILD_DIR)/*.o $(TARGET)
 
-$(DIR)/%.o: $(MODS_DIR)/%.cpp
+$(BUILD_DIR)/%.o: $(MODS_DIR)/%.cpp
 	echo $@ $<
 	$(CC) $(CFLAGS) $< -o $@
 
