@@ -3,6 +3,11 @@
 #include "const.hpp"
 #include "strL.hpp"
 
+struct chunk_count {
+    unsigned w_count;
+    unsigned h_count;
+};
+
 class chunkL {
     public:
         // Нуль-конструктор, создаёт пустой объект класса
@@ -26,7 +31,7 @@ class chunkL {
         // Отправить содержание чанка в поток
         void print(std::ostream& out);
 
-    private:
+        private:
         strL* textv;
         unsigned textc;
-};
+    };

@@ -1,12 +1,12 @@
 #include "chunkL.hpp"
 #include "strL.hpp"
 
-chunkL::chunkL() {}
+chunkL::chunkL() : textv(NULL), textc(0) {}
 chunkL::chunkL(strL* strv, unsigned strc) : textv(new strL[strc]{}), textc(strc)
 {
     for (unsigned i = 0; i < strc; ++i) textv[i] = strv[i];
 }
-chunkL::~chunkL() { delete [] textv; }
+chunkL::~chunkL() { if (textv != NULL) delete [] textv; }
 chunkL::chunkL(const chunkL& other) : chunkL(other.textv, other.textc) {}
 chunkL& chunkL::operator=(const chunkL& other)
 {

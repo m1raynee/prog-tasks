@@ -1,13 +1,13 @@
 #include "strL.hpp"
 
-strL::strL() : chv(nullptr), chc(0) {}
+strL::strL() : chv(NULL), chc(0) {}
 strL::strL(char* t, unsigned l) : chv(new char[l]{}), chc(l)
 {
     for (unsigned i = 0; i < l; ++i) {
         chv[i] = t[i];
     }
 }
-strL::~strL() { delete [] chv; }
+strL::~strL() { if (chv != NULL) delete [] chv; }
 strL::strL(const strL& other) : strL(other.chv, other.chc) {}
 strL& strL::operator=(const strL& other)
 {

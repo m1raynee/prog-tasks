@@ -1,8 +1,13 @@
-#include "modules/strL.hpp"
+#include "modules/files.hpp"
+#include <fstream>
 
 int main()
 {
-    strL s = strL((char[3]){'0', '0', '0'}, 3);
-    s.print(std::cout);
+    std::ifstream in;
+    in.open("in.txt");
+    chunk_count a = count_chunks(in);
+    std::cout << a.h_count << ' ' << a.w_count << std::endl;
+    txtPivots b = find_pivots(in);
+    b.print(std::cout);
     return 0;
 }
