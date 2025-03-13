@@ -31,6 +31,9 @@ void txtPivots::print(std::ostream& o)
     }
     o << std::endl;
 }
+int txtPivots::get_start(unsigned i) { return starts[i]; }
+int txtPivots::get_end(unsigned i) { return ends[i]; }
+int txtPivots::get_len(unsigned i) { return ends[i] - starts[i]; }
 
 unsigned count_lines(std::istream& in)
 {
@@ -43,32 +46,6 @@ unsigned count_lines(std::istream& in)
     in.clear();
     in.seekg(pos);
     return line_count;
-}
-
-chunk_count count_chunks(std::istream& in)
-{
-    std::streamoff pos = in.tellg();
-    int ch;
-    unsigned line_count = count_lines(in);
-
-    unsigned curr_line = 0, max_line = 0;
-
-    while ((ch = in.get()) and ch != -1)
-    {
-        if (ch == '\n')
-        {
-            if (curr_line > max_line) max_line = curr_line;
-            curr_line = 0;
-        }
-        ++curr_line;
-    }
-    in.clear();
-    in.seekg(pos, in.beg);
-
-    return chunk_count{
-        .w_count = max_line / CHUNK_W + (max_line % CHUNK_W ? 1 : 0),
-        .h_count = line_count / CHUNK_H + (line_count % CHUNK_H ? 1 : 0)
-    };
 }
 
 txtPivots find_pivots(std::istream& in)
@@ -88,14 +65,10 @@ txtPivots find_pivots(std::istream& in)
     bool make_start = true;
     while ((ch = in.get()))
     {
-        if (ch != '\n' and ch != -1)
+        if (make_start) { starts[curr_i] = curr_pos; make_start = false; }
+        if (ch == '\n' or ch == -1)
         {
-            if (make_start) { starts[curr_i] = curr_pos; make_start = false; }
-        }
-        else
-        {
-            if (make_start) starts[curr_i] = curr_pos - 1;
-            else make_start = true;
+            make_start = true;
             ends[curr_i++] = (int)curr_pos;
             if (ch == -1) break;
         }

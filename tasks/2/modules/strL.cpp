@@ -22,3 +22,7 @@ void strL::print(std::ostream& o)
     o << chv[i];
     o << '\n';
 }
+char& strL::set_char(char ch, unsigned i)
+{
+    return chv[i] = ch;
+}

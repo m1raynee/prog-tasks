@@ -25,6 +25,9 @@ class strL {
         // Отправить содержание строки в поток
         void print(std::ostream& out);
 
+        // Заменить i-тый символ
+        char& set_char(char ch, unsigned i);
+
     private:
         char* chv;
         unsigned chc;

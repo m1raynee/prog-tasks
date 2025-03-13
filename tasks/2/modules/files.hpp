@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include "chunkL.hpp"
 
 class txtPivots {
     public:
@@ -22,14 +21,18 @@ class txtPivots {
         // Отправить содержание чанка в поток
         void print(std::ostream& out);
 
+        int get_start(unsigned i);
+        int get_end(unsigned i);
+        int get_len(unsigned i);
+
     private:
         int* starts;
         int* ends;
         unsigned textc;
 };
 
-// Разбивает весь исходный файл на блоки
-chunk_count count_chunks(std::istream& in);
+// Возвращает количество строк в файле
+unsigned count_lines(std::istream& in);
 
 // Возвращает класс с началом и концом строк
 txtPivots find_pivots(std::istream& in);

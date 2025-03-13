@@ -2,10 +2,11 @@
 
 #include "const.hpp"
 #include "strL.hpp"
+#include "files.hpp"
 
 struct chunk_count {
-    unsigned w_count;
-    unsigned h_count;
+    unsigned w;
+    unsigned h;
 };
 
 class chunkL {
@@ -25,13 +26,19 @@ class chunkL {
         // Копирование через назначение
         chunkL& operator=(const chunkL& other);
 
-        // Make task
-        void process();
-
         // Отправить содержание чанка в поток
         void print(std::ostream& out);
 
-        private:
+        // Заменить i-тую строку на данную
+        strL& set_str(strL &str, unsigned i);
+
+    private:
         strL* textv;
         unsigned textc;
-    };
+};
+
+// Разбивает весь исходный файл на блоки
+chunk_count count_chunks(std::istream& in);
+
+// Читает чанк текста x-овой строки, y-ого столбца
+chunkL read_chunk(std::istream& in, txtPivots pivots, int x, int y);
