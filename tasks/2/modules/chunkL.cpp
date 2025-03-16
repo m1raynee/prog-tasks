@@ -61,7 +61,7 @@ chunk_count count_chunks(std::istream& in)
         .h = line_count / CHUNK_H + (line_count % CHUNK_H ? 1 : 0)
     };
 }
-chunkL read_chunk(std::istream& in, txtPivots pivots, int x, int y)
+chunkL read_chunk(std::ostream& log, std::istream& in, txtPivots pivots, int x, int y)
 {
     strL* temp_strs = new strL[CHUNK_H]{};
     chunkL chunk = chunkL(temp_strs, CHUNK_H);
@@ -82,6 +82,7 @@ chunkL read_chunk(std::istream& in, txtPivots pivots, int x, int y)
         delete [] temp;
         chunk.set_str(str, i);
     }
+    log << "Блок " << x << ':' << y << " считан\n";
     return chunk;
 }
 
@@ -89,75 +90,77 @@ bool is_valid_name_char(char ch)
 {
     return ((ch >= 'A') and (ch <= 'Z'))
         or ((ch >= 'a') and (ch <= 'z'))
-        or ((ch >= '0') and (ch <= '9'))
+        // or ((ch >= '0') and (ch <= '9'))
         or (ch == '_');
 }
 
 // Просчитывает чанк
-void parse_chunk(resultStates* res_ptr, chunkL chunk, bool last, std::ostream& log)
+void parse_chunk(std::ostream& log, std::istream& in, resultStates* res_ptr, chunkL chunk)
 {
     readState mid_chunk = res_ptr->get_mid_chunk();
-    lineState* line_state = mid_chunk.l;
+    lineState* line_state = mid_chunk.l;  // ++ at the end of loop
     for (unsigned i = 0; i < CHUNK_H; ++i)
     {
         strL line = chunk.get_str(i);
+        line.print(log);
+
         for (unsigned j = 0; j < line.get_chc(); ++j)
         {
-            int curr_pos = line.get_offset() + j;
+            int pos = line.get_offset() + j;
             char curr_ch = line.get_char(j);
-            if (curr_ch == '\n')
+            switch (line_state->state)
             {
-                line_state->state = eol;
-            }
-
-            else if (line_state->state == nothing)
-            {
+            case nothing:
                 if (is_valid_name_char(curr_ch))
                 {
                     line_state->state = name;
-                    line_state->name_start = curr_pos;
+                    line_state->name_start = pos;
                 }
-            }
-            else if (line_state->state == name)
-            {
+                break;
+            case name:
                 if (!is_valid_name_char(curr_ch))
                 {
-                    if (line_state->name_end == -1) line_state->name_end = curr_pos;
+                    if (line_state->name_end == -1) line_state->name_end = pos;
                     if (curr_ch == '[')
                     {
-                        line_state->opened_bracket = curr_pos;
+                        line_state->opened_bracket = pos;
                         line_state->state = open_bracket;
                     }
+                    else {
+                        (*line_state) = lineState();
+                        line_state->state = name;
+                        line_state->name_start = pos;
+                    }
                 }
-            }
-            else if (line_state->state == open_bracket)
-            {
+                break;
+            case open_bracket:
                 if (curr_ch == ']')
                 {
-                    line_state->closed_bracket = curr_pos;
+                    line_state->closed_bracket = pos;
                     line_state->state = close_bracket;
                 }
-            }
-            else if (line_state->state == close_bracket)
-            {
+                break;
+            case close_bracket:
                 if (curr_ch == '[') line_state->state = second_brackets;
                 if (curr_ch == '=' or curr_ch == '{' or curr_ch == ';')
                 {
-                    (*res_ptr).append_state(*line_state, log);
-                    mid_chunk.l[i] = lineState();
+                    (*res_ptr).append_state(*line_state, log, in);
+                    (*line_state) = lineState();
                 }
-            }
-            else if (line_state->state == second_brackets)
-            {
-                if (curr_ch == ']') line_state->closed_bracket = curr_pos;
+                break;
+            case second_brackets:
+                if (curr_ch == ']') line_state->closed_bracket = pos;
                 if (curr_ch == '=' or curr_ch == '{' or curr_ch == ';')
                 {
-                    (*res_ptr).append_state(*line_state, log);
-                    mid_chunk.l[i] = lineState();
+                    (*res_ptr).append_state(*line_state, log, in);
+                    (*line_state) = lineState();
                 }
+                break;
+            default:
+                break;
             }
         }
-        line_state++;
+        line_state++; log << '\n';
     }
     res_ptr->set_mid_chunk(mid_chunk);
 }

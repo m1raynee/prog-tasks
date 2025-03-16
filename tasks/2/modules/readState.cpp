@@ -9,7 +9,7 @@ lineState::lineState() {
 }
 void lineState::print(std::ostream& o, bool is_short)
 {
-    o << "[статус: ";
+    o << "| статус: ";
     switch (state)
     {
     case nothing: o << "ничего"; break;
@@ -17,7 +17,6 @@ void lineState::print(std::ostream& o, bool is_short)
     case open_bracket: o << "открытие скобки"; break;
     case close_bracket: o << "закрытие скобки"; break;
     case second_brackets: o << "повторные скобки"; break;
-    case eol: o << "конец строки"; break;
     default: break;
     }
 
@@ -27,7 +26,23 @@ void lineState::print(std::ostream& o, bool is_short)
         o << ' ' << opened_bracket << ';';
         o << ' ' << closed_bracket;
     }
-    o << ']';
+    o << " |";
+}
+void lineState::print(std::ostream& o, std::istream& in)
+{
+    char ch;
+    in.clear();
+    in.seekg(name_start);
+    for (unsigned i = name_start; i < name_end; ++i) { ch = in.get(); o << ch; }
+    o << " | ";
+    switch (state)
+    {
+    case close_bracket:
+        o << "одномерный"; break;
+    case second_brackets:
+        o << "многомерный"; break;
+    default: break;
+    }
 }
 resultStates::resultStates() : states(NULL), states_c(0), mid_chunk(readState{}) {}
 resultStates::resultStates(lineState* stv, unsigned stc, readState mc)
@@ -44,12 +59,12 @@ resultStates& resultStates::operator=(const resultStates& other)
     std::swap(states, temp.states);
     return *this;
 }
-void resultStates::append_state(lineState state, std::ostream& log)
+void resultStates::append_state(lineState state, std::ostream& log, std::istream& in)
 {
     lineState* temp = new lineState[states_c++]{};
-    log << "{новый ответ: ";
-    state.print(log, false);
-    log << '}';
+    log << " { найден массив:";
+    state.print(log, in);
+    log << " }";
     for (unsigned i = 0; i < states_c-1; ++i) temp[i] = states[i];
     temp[states_c] = state;
     delete [] states;

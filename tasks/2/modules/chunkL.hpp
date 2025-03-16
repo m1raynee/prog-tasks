@@ -44,7 +44,7 @@ class chunkL {
 chunk_count count_chunks(std::istream& in);
 
 // Читает чанк текста x-овой строки, y-ого столбца
-chunkL read_chunk(std::istream& in, txtPivots pivots, int x, int y);
+chunkL read_chunk(std::ostream& log, std::istream& in, txtPivots pivots, int x, int y);
 
 // Просчитывает чанк
-void parse_chunk(resultStates* res_ptr, chunkL chunk, bool last, std::ostream& log);
+void parse_chunk(std::ostream& log, std::istream& in, resultStates* res_ptr, chunkL chunk);

@@ -12,22 +12,20 @@ int main()
     in >> std::noskipws;
 
     chunk_count a = count_chunks(in);
-    std::cout << a.h << ' ' << a.w << std::endl;
-    txtPivots b = find_pivots(in);
-    b.print(std::cout);
+    txtPivots pivots = find_pivots(in);
+    pivots.print(out);
 
     chunkL chunk;
+    readState mid_chunk;
     resultStates result = resultStates();
     for (int y = 0; y < a.h; ++y) {
         for (int x = 0; x < a.w; ++x)
         {
-            std::cout << "Чанк " << x << ':' << y << '\n';
-            chunk = read_chunk(in, b, x, y);
-            parse_chunk(&result, chunk, ((x == a.w-1) ? true : false), out);
-            chunk.print(std::cout, result.get_mid_chunk());
-            std::cout << '\n';
+            chunk = read_chunk(out, in, pivots, x, y);
+            parse_chunk(out, in, &result, chunk);
+            out << '\n';
         }
-        std::cout << "Конец строки\n";
+        out << "Конец строки\n";
         result.set_mid_chunk(readState());
     }
     return 0;
