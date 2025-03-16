@@ -4,7 +4,7 @@ LDFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wc
 BUILD_DIR=./build/Debug
 MODS_DIR=./modules
 
-MODS_NAMES=chunkL.cpp strL.cpp files.cpp
+MODS_NAMES=chunkL.cpp strL.cpp files.cpp readState.cpp
 
 OBJS_NAMES = $(MODS_NAMES:.cpp=.o)
 OBJS=$(addprefix $(BUILD_DIR)/,$(OBJS_NAMES))

@@ -2,29 +2,40 @@
 #include "strL.hpp"
 #include "files.hpp"
 
-chunkL::chunkL() : textv(NULL), textc(0) {}
-chunkL::chunkL(strL* strv, unsigned strc) : textv(new strL[strc]{}), textc(strc)
+chunkL::chunkL() : lines(NULL), lines_c(0) {}
+chunkL::chunkL(strL* strv, unsigned strc) : lines(new strL[strc]{}), lines_c(strc)
 {
-    for (unsigned i = 0; i < strc; ++i) textv[i] = strv[i];
+    for (unsigned i = 0; i < strc; ++i) lines[i] = strv[i];
 }
-chunkL::~chunkL() { if (textv != NULL) delete [] textv; }
-chunkL::chunkL(const chunkL& other) : chunkL(other.textv, other.textc) {}
+chunkL::~chunkL() { if (lines != NULL) delete [] lines; }
+chunkL::chunkL(const chunkL& other) : chunkL(other.lines, other.lines_c) {}
 chunkL& chunkL::operator=(const chunkL& other)
 {
     chunkL temp(other);
-    std::swap(textc, temp.textc);
-    std::swap(textv, temp.textv);
+    std::swap(lines_c, temp.lines_c);
+    std::swap(lines, temp.lines);
     return *this;
 }
 void chunkL::print(std::ostream& o)
 {
-    for (unsigned i = 0; i < textc; ++i)
-    textv[i].print(o);
+    for (unsigned i = 0; i < lines_c; ++i)
+    {
+        lines[i].print(o);
+        o << '\n';
+    }
+
 }
-strL& chunkL::set_str(strL &str, unsigned i)
+void chunkL::print(std::ostream& o, readState state)
 {
-    return textv[i] = str;
+    for (unsigned i = 0; i < lines_c; ++i)
+    {
+        lines[i].print(o);
+        state.l[i].print(o, false);
+        o << '\n';
+    }
 }
+strL& chunkL::set_str(strL &str, unsigned i) { return lines[i] = str; }
+strL& chunkL::get_str(unsigned i) { return lines[i]; }
 chunk_count count_chunks(std::istream& in)
 {
     std::streamoff pos = in.tellg();
@@ -59,16 +70,94 @@ chunkL read_chunk(std::istream& in, txtPivots pivots, int x, int y)
     in.clear();
     for (unsigned i = 0; i < CHUNK_H; ++i)
     {
-        int chc = pivots.get_len(y * CHUNK_H + i) - x * CHUNK_W;
-        in.seekg(pivots.get_start(y * CHUNK_H + i) + x * CHUNK_W + i + y * CHUNK_H);
-        chc = (chc > CHUNK_W) ? CHUNK_W : chc;
-        chc = (chc < 0) ? 0 : chc;
-        char* temp = new char[chc];
-        for (int j = 0; j < chc; ++j) temp[j] = (char)in.get();
-        strL str = strL(temp, chc);
+        int chars_c = pivots.get_len(y * CHUNK_H + i) - x * CHUNK_W;
+        int offset = pivots.get_start(y * CHUNK_H + i) + x * CHUNK_W + i + y * CHUNK_H;
+        if (offset-i-y*CHUNK_H > pivots.get_end(pivots.textc()-1)) chars_c = 0;
+        in.seekg(offset);
+        chars_c = (chars_c > CHUNK_W) ? CHUNK_W : chars_c;
+        chars_c = (chars_c < 0) ? 0 : chars_c;
+        char* temp = new char[chars_c]{};
+        for (int j = 0; j < chars_c; ++j) temp[j] = (char)in.get();
+        strL str = strL(temp, chars_c, offset);
         delete [] temp;
         chunk.set_str(str, i);
     }
     return chunk;
 }
 
+bool is_valid_name_char(char ch)
+{
+    return ((ch >= 'A') and (ch <= 'Z'))
+        or ((ch >= 'a') and (ch <= 'z'))
+        or ((ch >= '0') and (ch <= '9'))
+        or (ch == '_');
+}
+
+// Просчитывает чанк
+void parse_chunk(resultStates* res_ptr, chunkL chunk, bool last, std::ostream& log)
+{
+    readState mid_chunk = res_ptr->get_mid_chunk();
+    lineState* line_state = mid_chunk.l;
+    for (unsigned i = 0; i < CHUNK_H; ++i)
+    {
+        strL line = chunk.get_str(i);
+        for (unsigned j = 0; j < line.get_chc(); ++j)
+        {
+            int curr_pos = line.get_offset() + j;
+            char curr_ch = line.get_char(j);
+            if (curr_ch == '\n')
+            {
+                line_state->state = eol;
+            }
+
+            else if (line_state->state == nothing)
+            {
+                if (is_valid_name_char(curr_ch))
+                {
+                    line_state->state = name;
+                    line_state->name_start = curr_pos;
+                }
+            }
+            else if (line_state->state == name)
+            {
+                if (!is_valid_name_char(curr_ch))
+                {
+                    if (line_state->name_end == -1) line_state->name_end = curr_pos;
+                    if (curr_ch == '[')
+                    {
+                        line_state->opened_bracket = curr_pos;
+                        line_state->state = open_bracket;
+                    }
+                }
+            }
+            else if (line_state->state == open_bracket)
+            {
+                if (curr_ch == ']')
+                {
+                    line_state->closed_bracket = curr_pos;
+                    line_state->state = close_bracket;
+                }
+            }
+            else if (line_state->state == close_bracket)
+            {
+                if (curr_ch == '[') line_state->state = second_brackets;
+                if (curr_ch == '=' or curr_ch == '{' or curr_ch == ';')
+                {
+                    (*res_ptr).append_state(*line_state, log);
+                    mid_chunk.l[i] = lineState();
+                }
+            }
+            else if (line_state->state == second_brackets)
+            {
+                if (curr_ch == ']') line_state->closed_bracket = curr_pos;
+                if (curr_ch == '=' or curr_ch == '{' or curr_ch == ';')
+                {
+                    (*res_ptr).append_state(*line_state, log);
+                    mid_chunk.l[i] = lineState();
+                }
+            }
+        }
+        line_state++;
+    }
+    res_ptr->set_mid_chunk(mid_chunk);
+}

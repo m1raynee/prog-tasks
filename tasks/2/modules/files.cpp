@@ -1,9 +1,9 @@
 #include "files.hpp"
 #include <iomanip>
 
-txtPivots::txtPivots() : starts(NULL), ends(NULL), textc(0) {}
+txtPivots::txtPivots() : starts(NULL), ends(NULL), pivots_count(0) {}
 txtPivots::txtPivots(int* st, int* en, unsigned strc)
-    : starts(new int[strc]{}), ends(new int[strc]{}), textc(strc)
+    : starts(new int[strc]{}), ends(new int[strc]{}), pivots_count(strc)
 {
     for (unsigned i = 0; i < strc; ++i) { starts[i] = st[i]; ends[i] = en[i]; }
 }
@@ -12,11 +12,11 @@ txtPivots::~txtPivots()
     if (starts != NULL) delete [] starts;
     if (ends != NULL) delete [] ends;
 }
-txtPivots::txtPivots(const txtPivots& other) : txtPivots(other.starts, other.ends, other.textc) {}
+txtPivots::txtPivots(const txtPivots& other) : txtPivots(other.starts, other.ends, other.pivots_count) {}
 txtPivots& txtPivots::operator=(const txtPivots& other)
 {
     txtPivots temp(other);
-    std::swap(textc, temp.textc);
+    std::swap(pivots_count, temp.pivots_count);
     std::swap(starts, temp.starts);
     std::swap(ends, temp.ends);
     return *this;
@@ -25,7 +25,7 @@ void txtPivots::print(std::ostream& o)
 {
     o << "Text pivots:\n";
     o << "starts   ends\n";
-    for (unsigned i = 0; i < textc; ++i)
+    for (unsigned i = 0; i < pivots_count; ++i)
     {
         o << std::setw(6) << starts[i] << std::setw(6) << ends[i] << '\n';
     }
@@ -34,6 +34,7 @@ void txtPivots::print(std::ostream& o)
 int txtPivots::get_start(unsigned i) { return starts[i]; }
 int txtPivots::get_end(unsigned i) { return ends[i]; }
 int txtPivots::get_len(unsigned i) { return ends[i] - starts[i]; }
+unsigned txtPivots::textc() { return pivots_count; }
 
 unsigned count_lines(std::istream& in)
 {

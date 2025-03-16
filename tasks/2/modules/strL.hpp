@@ -9,6 +9,8 @@ class strL {
 
         // Конструктор, создающий строку из указателя
         strL(char* symbols, unsigned count);
+        // Конструктор, создающий строку из указателя
+        strL(char* symbols, unsigned count, int offset);
 
         // Деструктор
         ~strL();
@@ -27,8 +29,12 @@ class strL {
 
         // Заменить i-тый символ
         char& set_char(char ch, unsigned i);
+        char get_char(unsigned i);
+        unsigned get_chc();
+        int get_offset();
 
     private:
-        char* chv;
-        unsigned chc;
+        char* chars;
+        unsigned chars_c;
+        int offset;
 };

@@ -1,3 +1,3 @@
 #pragma once
-#define CHUNK_W 3
-#define CHUNK_H 2
+#define CHUNK_W 5
+#define CHUNK_H 3

@@ -24,11 +24,12 @@ class txtPivots {
         int get_start(unsigned i);
         int get_end(unsigned i);
         int get_len(unsigned i);
+        unsigned textc();
 
     private:
         int* starts;
         int* ends;
-        unsigned textc;
+        unsigned pivots_count;
 };
 
 // Возвращает количество строк в файле
