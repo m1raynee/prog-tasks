@@ -24,16 +24,12 @@ class txtPivots {
         int get_start(unsigned i);
         int get_end(unsigned i);
         int get_len(unsigned i);
-        unsigned textc();
+        unsigned get_c();
 
     private:
         int* starts;
         int* ends;
-        unsigned pivots_count;
+        unsigned pivots_c;
 };
-
-// Возвращает количество строк в файле
 unsigned count_lines(std::istream& in);
-
-// Возвращает класс с началом и концом строк
 txtPivots find_pivots(std::istream& in);

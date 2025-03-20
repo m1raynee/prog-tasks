@@ -21,16 +21,13 @@ class strL {
         // Копирование через назначение
         strL& operator=(const strL& other);
 
-        // Make task
-        void process();
-
         // Отправить содержание строки в поток
         void print(std::ostream& out);
 
         // Заменить i-тый символ
         char& set_char(char ch, unsigned i);
         char get_char(unsigned i);
-        unsigned get_chc();
+        unsigned get_char_c();
         int get_offset();
 
     private:

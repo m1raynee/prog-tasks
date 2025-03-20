@@ -27,6 +27,6 @@ char& strL::set_char(char ch, unsigned i)
 {
     return chars[i] = ch;
 }
-unsigned strL::get_chc() { return chars_c; } 
+unsigned strL::get_char_c() { return chars_c; } 
 int strL::get_offset() { return offset; } 
 char strL::get_char(unsigned i) { return chars[i]; }

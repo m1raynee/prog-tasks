@@ -1,6 +1,4 @@
 #include "chunkL.hpp"
-#include "strL.hpp"
-#include "files.hpp"
 
 chunkL::chunkL() : lines(NULL), lines_c(0) {}
 chunkL::chunkL(strL* strv, unsigned strc) : lines(new strL[strc]{}), lines_c(strc)
@@ -72,7 +70,7 @@ chunkL read_chunk(std::ostream& log, std::istream& in, txtPivots pivots, int x, 
     {
         int chars_c = pivots.get_len(y * CHUNK_H + i) - x * CHUNK_W;
         int offset = pivots.get_start(y * CHUNK_H + i) + x * CHUNK_W + i + y * CHUNK_H;
-        if (offset-i-y*CHUNK_H > pivots.get_end(pivots.textc()-1)) chars_c = 0;
+        if (offset-i-y*CHUNK_H > pivots.get_end(pivots.get_c()-1)) chars_c = 0;
         in.seekg(offset);
         chars_c = (chars_c > CHUNK_W) ? CHUNK_W : chars_c;
         chars_c = (chars_c < 0) ? 0 : chars_c;
@@ -104,7 +102,7 @@ void parse_chunk(std::ostream& log, std::istream& in, resultStates* res_ptr, chu
         strL line = chunk.get_str(i);
         line.print(log);
 
-        for (unsigned j = 0; j < line.get_chc(); ++j)
+        for (unsigned j = 0; j < line.get_char_c(); ++j)
         {
             int pos = line.get_offset() + j;
             char curr_ch = line.get_char(j);

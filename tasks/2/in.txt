@@ -1,3 +1,4 @@
 int array[100] = {2, 3};
 char list[][10];
 unsigned massiv[] = {1, 2, 3, 4};
+int array[100] = {2, 3};

@@ -1,25 +1,23 @@
-#include "modules/files.hpp"
 #include "modules/chunkL.hpp"
-#include "modules/readState.hpp"
 #include <fstream>
 
 int main()
 {
+    chunkL chunk;
+    readState mid_chunk;
     std::ifstream in;
     std::ofstream out;
     in.open("in.txt");
     out.open("out.txt");
     in >> std::noskipws;
+    resultStates result = resultStates();
 
-    chunk_count a = count_chunks(in);
+    chunk_count counts = count_chunks(in);
     txtPivots pivots = find_pivots(in);
     pivots.print(out);
 
-    chunkL chunk;
-    readState mid_chunk;
-    resultStates result = resultStates();
-    for (int y = 0; y < a.h; ++y) {
-        for (int x = 0; x < a.w; ++x)
+    for (int y = 0; y < counts.h; ++y) {
+        for (int x = 0; x < counts.w; ++x)
         {
             chunk = read_chunk(out, in, pivots, x, y);
             parse_chunk(out, in, &result, chunk);

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "const.hpp"
 #include "strL.hpp"
 #include "files.hpp"
 #include "readState.hpp"

@@ -12,41 +12,22 @@ struct lineState {
     int closed_bracket = -1;
 
     lineState();
-
     void print(std::ostream& out, bool is_short);
     void print(std::ostream& out, std::istream& in);
 };
 
-struct readState
-{
-    lineState l[CHUNK_H]{};
-};
+struct readState { lineState l[CHUNK_H]{}; };
 
 class resultStates {
     public:
-        // Нуль-конструктор, создаёт пустой объект класса
         resultStates();
-
         resultStates(lineState* stv, unsigned stc, readState mc);
-
-        // Деструктор
         ~resultStates();
-
-        // Конструктор-копия
         resultStates(const resultStates& other);
-
-        // Копирование через назначение
         resultStates& operator=(const resultStates& other);
-
-        // Отправить содержание чанка в поток
-        void print(std::ostream& out);
-
-        // Добавляет статус в результирующие
         void append_state(lineState state, std::ostream& log, std::istream& in);
-
         readState set_mid_chunk(readState mc);
         readState get_mid_chunk();
-
     private:
         lineState* states;
         unsigned states_c;
