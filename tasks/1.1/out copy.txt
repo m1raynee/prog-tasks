@@ -1,0 +1,36 @@
+Строка No. 5
+Контрольный вывод:
+@*
+Результат:
+@
+
+Строка No. 6
+Контрольный вывод:
+@*
+Результат:
+@
+
+Строка No. 7
+Контрольный вывод:
+@*
+Результат:
+@
+
+Строка No. 8
+Контрольный вывод:
+Donec in leo luctus. Viverra.@berla tincros*
+Результат:
+Donec in leo luctus... Viverra...@
+
+Строка No. 9
+Контрольный вывод:
+Donec in leo luctus. Viverra.@*
+Результат:
+Donec in leo luctus... Viverra...@
+
+Строка No. 10
+Контрольный вывод:
+Donec in leo luctus. @@Viverra ligula*
+Результат:
+Donec in leo luctus... @
+

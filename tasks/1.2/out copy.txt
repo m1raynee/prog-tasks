@@ -1,0 +1,7 @@
+Результат:  Donec in leo luctus... Viverra...@berla tincros*asdfgedo...
+Строка No.10:
+Считано:    Donec in leo luctus. Viverra.*berla tincros@asdfgedo.
+Результат:  Donec in leo luctus... Viverra...*berla tincros@asdfgedo...
+Строка No.11:
+Считано:    Donec in leo luctus. @@Viverra ligula*** tincidunt, mol@@estie neque. Se@*d quis
+Результат:  Donec in leo luctus... @@Viverra ligula*** tincidunt, mol@@estie neque... Se@*d quis
