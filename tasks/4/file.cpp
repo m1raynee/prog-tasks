@@ -12,6 +12,7 @@ str readline(istream &in) {
         }
         p->value.s[i++ % CHUNK_WIDTH] = (char)ch;
     }
+    if (result.is_empty()) result.push_back(new str::Node());
     result.A.last = i % CHUNK_WIDTH;
     return result;
 }
@@ -28,16 +29,23 @@ void bar(ostream& out) {
 }
 
 void process(strings *l1, strings *l2) {
+
     strings::Node *p = l2->first, *q = l2->first->next;
     while (p) {
         if (!l2->cur) {
-            l2->cur = new strings::Node(*p);
+            l2->cur = p;
             l2->cur->next = nullptr;
         }
-        else if (!(*l2->cur >>= *p)) {
-            strings::Node *r = new strings::Node(*p);
-            r->next = l2->cur;
-            l2->cur = r;
+        else {
+            strings::Node *e = *l2->cur >>= *p;
+            if (!e) {
+                p->next = l2->cur;
+                l2->cur = p;
+            } else {
+                strings::Node *e_next = e->next;
+                e->next = p;
+                p->next = e_next;
+            }
         }
         p = q;
         if (q) q = q->next;

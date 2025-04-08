@@ -37,15 +37,15 @@ bool list<ValueT, AT>::operator!=(
 ) { return !(*this == other); }
 
 template<Printable ValueT, typename AT>
-bool list<ValueT, AT>::Node::operator>>=(
+list<ValueT, AT>::Node *list<ValueT, AT>::Node::operator>>=(
     const Node& other
 ) {
     Node *p = this;
     while (p) {
-        if (p->value == other.value) return true;
+        if (p->value == other.value) return p;
         p = p->next;
     }
-    return false;
+    return p;
 }
 
 template<Printable ValueT, typename AT>

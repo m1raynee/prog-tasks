@@ -18,7 +18,7 @@ struct list {
 
         Node();
         Node(ValueT value);
-        bool operator>>=(const Node& other);
+        Node *operator>>=(const Node& other);
     };
 
     Node *first, *cur, *last;

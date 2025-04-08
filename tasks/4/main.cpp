@@ -26,6 +26,5 @@ int main() {
     out << "l1 (результирующий список)\n\n";
     l1.print(out);
     l1.destroy();
-    l2.destroy();
     return 0;
 }
