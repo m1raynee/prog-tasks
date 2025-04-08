@@ -4,12 +4,14 @@
 struct chunk {
     char s[CHUNK_WIDTH]{};
     void print(ostream& out);
+    void print(ostream& out, int len);
     bool operator==(const chunk& other);
     bool operator!=(const chunk& other);
 };
 
 struct _foo {
     char arrow[5] = "\\|/\n";
+    int last = 0;
 };
 struct _bar {
     char arrow[4] = " > ";

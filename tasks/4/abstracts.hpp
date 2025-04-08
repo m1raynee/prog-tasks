@@ -10,7 +10,7 @@ concept Printable = requires(T t, ostream& o) {
     {t.print(o)};
 };
 
-template<Printable ValueT, typename Additional>
+template<Printable ValueT, typename AT>
 struct list {
     struct Node {
         ValueT value;
@@ -22,7 +22,7 @@ struct list {
     };
 
     Node *first, *cur, *last;
-    Additional A;
+    AT A;
 
     list();
     bool operator==(const list& other);
@@ -32,6 +32,9 @@ struct list {
     void push_back(const ValueT& value);
     void push_back(Node* node);
     void print(ostream& out);
+    void print(ostream& out, int last);
+
+    void destroy();
 };
 
 #include "abstracts.ipp"

@@ -8,27 +8,24 @@ int main() {
     in1.open("in.txt");
     in2.open("in copy.txt");
     out.open("out.txt");
+
     strings l1 = readfile(in1);
     strings l2 = readfile(in2);
+
+    out << "l1 (исходный список, in.txt)\n\n";
     l1.print(out);
     bar(out);
+
+    out << "l2 (убрать повторения, перевернуть, "
+    << "вставить в конец l1, in copy.txt)\n\n";
     l2.print(out);
     bar(out);
 
-    strings::Node *p = l2.first, *q = l2.first->next;
-    while (p) {
-        if (!l2.cur) {
-            l2.cur = p;
-            p->next = nullptr;
-        }
-        else if (!(*l2.cur >>= *p)) {
-            p->next = l2.cur;
-            l2.cur = p;
-        }
-        p = q;
-        if (q) q = q->next;
-    }
-    l1.last->next = l2.cur;
+    process(&l1, &l2);
+
+    out << "l1 (результирующий список)\n\n";
     l1.print(out);
+    l1.destroy();
+    l2.destroy();
     return 0;
 }
