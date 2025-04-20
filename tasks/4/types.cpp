@@ -1,7 +1,7 @@
 #include "types.hpp"
 
 void chunk::print(ostream& out) {
-    for (int i = 0; i < CHUNK_WIDTH; ++i) out << s[i];
+    print(out, CHUNK_WIDTH);
 }
 void chunk::print(ostream& out, int len) {
     for (int i = 0; i < len; ++i) out << s[i];

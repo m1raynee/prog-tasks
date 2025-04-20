@@ -11,7 +11,6 @@ struct chunk {
 
 struct _foo {
     char arrow[5] = "\\|/\n";
-    int last = 0;
 };
 struct _bar {
     char arrow[4] = " > ";

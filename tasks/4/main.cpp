@@ -16,7 +16,7 @@ int main() {
     l1.print(out);
     bar(out);
 
-    out << "l2 (убрать повторения, перевернуть, "
+    out << "l2 (сгруппировать, перевернуть, "
     << "вставить в конец l1, in copy.txt)\n\n";
     l2.print(out);
     bar(out);

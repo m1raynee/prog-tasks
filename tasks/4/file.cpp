@@ -48,7 +48,7 @@ void process(strings *l1, strings *l2) {
             }
         }
         p = q;
-        if (q) q = q->next;
+        q = q ? q->next : nullptr;
     }
     // l1 имеет хотя бы один элемент - пустая строка
     l1->last->next = l2->cur;
