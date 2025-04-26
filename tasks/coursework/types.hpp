@@ -8,13 +8,8 @@ void destroy();                             \
 inline static char sep[] = SEP;             \
 inline static char end[] = END;
 
-struct date;
 struct StrChunk;
-struct Executor;
-struct Task;
-struct MultiTask;
 using str = list<StrChunk, unsigned>;
-
 
 struct date {
     // ```
@@ -33,15 +28,15 @@ struct date {
     short unsigned day();
 };
 
-
 struct StrChunk {
     char s[STR_CHUNK_LENGTH]{};
-
+    
     NODE_CONSTRAINT_FOR(StrChunk, " -> ", "nullptr\n")
     void print(ostream& out, int count);
     bool operator==(const StrChunk& other);
 };
 
+struct Task;
 struct Executor {
     str initials{};
     str address{};
