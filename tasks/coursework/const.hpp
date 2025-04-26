@@ -1,0 +1,1 @@
+#define STR_CHUNK_LENGTH 32
