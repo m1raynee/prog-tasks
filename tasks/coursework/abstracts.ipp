@@ -1,38 +1,48 @@
 #pragma once
 #include "abstracts.hpp"
 
-template<typename V, typename SpecV>
-list<V, SpecV>::Node::Node()
+template<typename V, typename SpecT>
+list<V, SpecT>::Node::Node()
     : value{}, next(nullptr) {}
 
-template<typename V, typename SpecV>
-list<V, SpecV>::Node::Node(V* v)
+template<typename V, typename SpecT>
+list<V, SpecT>::Node::Node(V* v)
     : value(v), next(nullptr) {}
 
-template<typename V, typename SpecV>
-list<V, SpecV>::Node*
-list<V, SpecV>::Node::replicate() {
+template<typename V, typename SpecT>
+list<V, SpecT>::Node*
+list<V, SpecT>::Node::replicate() {
     return new Node(value);
 }
 
-template<typename V, typename SpecV>
-list<V, SpecV>::list(bool is_v)
+template<typename V, typename SpecT>
+list<V, SpecT>::list(bool is_v)
     : first(nullptr), last(nullptr),
-      is_virtual(is_v), spec(nullptr) {}
+    spec_bytes(0), is_virtual(is_v) {}
 
-template<typename V, typename SpecV>
-bool list<V, SpecV>::operator<(
-    const list<V, SpecV>& other
+template<typename V, typename SpecT>
+const SpecT list<V, SpecT>::spec() const {
+    return *reinterpret_cast<const SpecT*>(spec_bytes);
+}
+
+template<typename V, typename SpecT>
+void list<V, SpecT>::set_spec(SpecT* v) {
+    *reinterpret_cast<SpecT*>(spec_bytes) = *v;
+}
+
+template<typename V, typename SpecT>
+bool list<V, SpecT>::operator<(
+    const list<V, SpecT>& other
 ) { throw std::logic_error("Not implemented"); }
 
-template<typename V, typename SpecV>
-bool list<V, SpecV>::is_empty() {
+template<typename V, typename SpecT>
+bool list<V, SpecT>::is_empty() {
     return first == nullptr;
 }
 
-template<typename V, typename SpecV>
-void list<V, SpecV>::push_back(
-    list<V, SpecV>::Node* node
+template<typename V, typename SpecT>
+void list<V, SpecT>::push_back(
+    list<V, SpecT>::Node* node
 ) {
     if (is_empty()) {
         first = last = node;
@@ -42,18 +52,13 @@ void list<V, SpecV>::push_back(
     last = node;
 }
 
-template<typename V, typename SpecV>
-void list<V, SpecV>::push_back(Node** node) {
-    push_back((*node)->replicate());
-}
-
-template<typename V, typename SpecV>
-void list<V, SpecV>::push_back(const V* value) {
+template<typename V, typename SpecT>
+void list<V, SpecT>::push_back(const V* value) {
     push_back(new Node(value));
 }
 
-template<typename V, typename SpecV>
-void list<V, SpecV>::print(ostream& out) {
+template<typename V, typename SpecT>
+void list<V, SpecT>::print(ostream& out) {
     Node* p = first;
     while (p) {
         p->value->print(out);
@@ -63,8 +68,8 @@ void list<V, SpecV>::print(ostream& out) {
     out << p->value->end;
 }
 
-template<typename V, typename SpecV>
-void list<V, SpecV>::destroy() {
+template<typename V, typename SpecT>
+void list<V, SpecT>::destroy() {
     while (!is_empty()) {
         Node* p = first;
         first = p->next;

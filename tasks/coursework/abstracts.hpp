@@ -3,7 +3,7 @@
 
 using std::ostream;
 
-template<typename V, typename SpecV = void>
+template<typename V, typename SpecT = void>
 struct list {
     struct Node {
         V* value;
@@ -15,14 +15,16 @@ struct list {
     };
 
     Node* first, * last;
-    SpecV* spec;
-    bool is_virtual = false;
+    char spec_bytes[sizeof(SpecT)];
+    bool is_virtual;
+
+    const SpecT spec() const;
+    void set_spec(SpecT* value);
 
     list(bool is_virtual = false);
     bool operator<(const list& other);
     bool is_empty();
     void push_back(Node* node);
-    void push_back(Node* *node);
     void push_back(const V* value);
     void print(ostream& out);
     void destroy();

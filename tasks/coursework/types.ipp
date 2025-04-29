@@ -9,9 +9,9 @@ bool str::operator<(const str& other) {
 
     while (p and q) {
         if (!(p or q)) {
-            if (*spec != *other.spec)
-                return *spec < *other.spec;
-            size = *spec;
+            if (spec() != other.spec())
+                return spec() < other.spec();
+            size = spec();
         }
         // return true if other is longer <=> another q exists
         if (bool(p) ^ bool(q)) return bool(q);
@@ -25,5 +25,16 @@ bool str::operator<(const str& other) {
 
         p = p->next;
         q = q->next;
+    }
+    return true;
+}
+
+template<>
+void str::print(ostream& out) {
+    Node* p = first;
+    while (p) {
+        if (!p->next) p->value->print(out, spec());
+        p->value->print(out);
+        p = p->next;
     }
 }

@@ -12,6 +12,7 @@ struct StrChunk;
 using str = list<StrChunk, unsigned>;
 
 struct date {
+    // memory efficiency!!
     // ```
     //     2           1           0
     // 0000 0000 | 0000 0000 | 0000 0000
