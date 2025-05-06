@@ -1,5 +1,4 @@
 #pragma once
-#include "abstracts.hpp"
 
 template<typename V, typename SpecT>
 list<V, SpecT>::Node::Node()
@@ -17,8 +16,8 @@ list<V, SpecT>::Node::replicate() {
 
 template<typename V, typename SpecT>
 list<V, SpecT>::list(bool is_v)
-    : first(nullptr), last(nullptr),
-    spec_bytes(0), is_virtual(is_v) {}
+    : is_virtual(is_v), first(nullptr), last(nullptr),
+    spec_bytes(0) {}
 
 template<typename V, typename SpecT>
 const SpecT list<V, SpecT>::spec() const {
@@ -31,7 +30,7 @@ void list<V, SpecT>::set_spec(SpecT* v) {
 }
 
 template<typename V, typename SpecT>
-bool list<V, SpecT>::operator<(
+[[noreturn]] bool list<V, SpecT>::operator<(
     const list<V, SpecT>& other
 ) { throw std::logic_error("Not implemented"); }
 
@@ -65,7 +64,7 @@ void list<V, SpecT>::print(ostream& out) {
         out << p->value->sep;
         p = p->next;
     }
-    out << p->value->end;
+    out << first->value->end;
 }
 
 template<typename V, typename SpecT>

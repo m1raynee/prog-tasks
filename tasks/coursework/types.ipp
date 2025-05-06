@@ -1,8 +1,7 @@
 #pragma once
-#include "types.hpp"
 
 template<>
-bool str::operator<(const str& other) {
+inline bool str::operator<(const str& other) {
     Node* p = first;
     Node* q = other.first;
     unsigned size = STR_CHUNK_LENGTH;
@@ -30,11 +29,24 @@ bool str::operator<(const str& other) {
 }
 
 template<>
-void str::print(ostream& out) {
+inline void str::print(ostream& out) {
     Node* p = first;
     while (p) {
         if (!p->next) p->value->print(out, spec());
         p->value->print(out);
+        out << p->value->sep;
         p = p->next;
     }
+    out << first->value->end;
+}
+
+template<typename V, typename SpecT>
+istream& operator>>(istream& is, list<V, SpecT>& obj) {
+    V* value;
+    while (!is.eof()) {
+        value = new V();
+        is >> *value;
+        obj.push_back(value);
+    }
+    return is;
 }

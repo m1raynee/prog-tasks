@@ -1,9 +1,9 @@
 CC=g++
-CFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0 -c
-LDFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -O0
+CFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wno-pointer-arith -g3 -O0 -c
+LDFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wno-pointer-arith -g3 -O0
 BUILD_DIR=./build/Debug
 
-MODS_NAMES= 
+MODS_NAMES=types.cpp file.cpp
 
 OBJS_NAMES = $(MODS_NAMES:.cpp=.o)
 OBJS=$(addprefix $(BUILD_DIR)/,$(OBJS_NAMES))

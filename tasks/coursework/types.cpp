@@ -21,6 +21,9 @@ short unsigned date::month() {
 short unsigned date::day() {
     return (bytes[2] & 0b01111100) >> 2;
 }
+bool date::is_empty() {
+    return not (bytes[0] or bytes[1] or bytes[2]);
+}
 
 bool StrChunk::operator==(const StrChunk& other) {
     for (unsigned i = 0; i < STR_CHUNK_LENGTH; ++i)
@@ -28,4 +31,45 @@ bool StrChunk::operator==(const StrChunk& other) {
     return true;
 }
 
-MultiTask tasks_pool{};
+void StrChunk::print(ostream& out) {
+    print(out, STR_CHUNK_LENGTH);
+}
+
+void StrChunk::print(ostream& out, unsigned count) {
+    for (unsigned i = 0; i < count; ++i)
+        out << s[i];
+}
+
+void StrChunk::destroy() {}
+
+void Executor::destroy() {
+    name.destroy();
+    address.destroy();
+    task_pool.destroy();
+}
+
+void Executor::print(ostream& out) {
+    name.print(out);
+    out << "\n\tАдрес: ";
+    address.print(out);
+}
+
+void Task::destroy() {
+    name.destroy();
+    executors.destroy();
+}
+
+void Task::print(ostream& out) {
+    name.print(out);
+    out << " (" << rate << " час(а/ов) за "
+        << fee << "тыс. руб.)\n";
+}
+
+void MultiTask::destroy() {
+    tasks.destroy();
+    tasks.destroy();
+}
+
+std::ofstream* Executor::protocol = nullptr;
+std::ofstream* Task::protocol = nullptr;
+std::ofstream* MultiTask::protocol = nullptr;
