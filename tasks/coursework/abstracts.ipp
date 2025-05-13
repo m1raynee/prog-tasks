@@ -2,7 +2,7 @@
 
 template<typename V, typename SpecT>
 list<V, SpecT>::Node::Node()
-    : value{}, next(nullptr) {}
+    : value{new V()}, next(nullptr) {}
 
 template<typename V, typename SpecT>
 list<V, SpecT>::Node::Node(V* v)
@@ -52,7 +52,7 @@ void list<V, SpecT>::push_back(
 }
 
 template<typename V, typename SpecT>
-void list<V, SpecT>::push_back(const V* value) {
+void list<V, SpecT>::push_back(V* value) {
     push_back(new Node(value));
 }
 

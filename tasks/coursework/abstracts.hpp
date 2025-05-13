@@ -26,7 +26,7 @@ struct list {
 
     bool is_empty();
     void push_back(Node* node);
-    void push_back(const V* value);
+    void push_back(V* value);
     void print(ostream& out);
     void destroy();
 };

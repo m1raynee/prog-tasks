@@ -61,8 +61,16 @@ void Task::destroy() {
 
 void Task::print(ostream& out) {
     name.print(out);
-    out << " (" << rate << " час(а/ов) за "
-        << fee << "тыс. руб.)\n";
+    out << "\n\t(" << rate << " час(а/ов) за "
+        << fee << "тыс. руб.)\n\t";
+    if (completion_date.is_empty()) {
+        out << "Не завершена\n";
+    } else {
+        out << "Дата завершения: " << completion_date.year()
+            << '-' << completion_date.month()
+            << '-' << completion_date.day() << ", объём работ: "
+            << scope << " час(а/ов)\n";
+    }
 }
 
 void MultiTask::destroy() {

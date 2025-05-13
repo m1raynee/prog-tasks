@@ -1,7 +1,7 @@
 #include "file.hpp"
 
 istream& operator>>(istream& is, str& obj) {
-    int ch; unsigned i; str::Node* p;
+    int ch; unsigned i = 0; str::Node* p;
     while ((ch = is.get()) > 0 and ch != '|' and ch != '\n') {
         if (i % STR_CHUNK_LENGTH == 0) {
             p = new str::Node();
@@ -26,8 +26,25 @@ istream& operator>>(istream& is, Task& obj) {
     if (is.get() != '|') return is;
     is >> obj.fee;
     if (is.get() != '|') return is;
-    if (is.get() == '|') {
-        is.get(); is.get();
+    if (is.get() == '|') { is.get(); is.get(); }
+    else {
+        is.seekg(-2, is.cur);
+        is >> obj.scope;
+        if (is.get() != '|') return is;
+        unsigned y; short unsigned m, d;
+        is >> y >> m >> d;
+        obj.completion_date = date(y, m, d);
     }
+
+    is >> obj._executors_positions;
+    return is;
+}
+
+istream& operator>>(istream& is, list<_Id>& obj) {
+    int ch; unsigned id;
+    do {
+        is >> id;
+        obj.push_back(new _Id{.id = id});
+    } while ((ch = is.get()) > 0 and ch == '/' and ch != '\n');
     return is;
 }
