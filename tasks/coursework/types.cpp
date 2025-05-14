@@ -50,8 +50,12 @@ void Executor::destroy() {
 
 void Executor::print(ostream& out) {
     name.print(out);
-    out << "\n\tÐÐ´Ñ€ÐµÑ: ";
+    out << "\n\tï¿½ï¿½ï¿½ï¿½ï¿½: ";
     address.print(out);
+}
+
+void _Id::print(ostream& out) {
+    out << id;
 }
 
 void Task::destroy() {
@@ -61,15 +65,15 @@ void Task::destroy() {
 
 void Task::print(ostream& out) {
     name.print(out);
-    out << "\n\t(" << rate << " Ñ‡Ð°Ñ(Ð°/Ð¾Ð²) Ð·Ð° "
-        << fee << "Ñ‚Ñ‹Ñ. Ñ€ÑƒÐ±.)\n\t";
+    out << "\n\t(" << rate << " ÷àñ(à/îâ) çà "
+        << fee << " òûñ. ðóá.)\n\t";
     if (completion_date.is_empty()) {
-        out << "ÐÐµ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð°\n";
+        out << "Íå çàâåðøåíî\n";
     } else {
-        out << "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¸Ñ: " << completion_date.year()
+        out << "Äàòà çàâåðøåíèÿ: " << completion_date.year()
             << '-' << completion_date.month()
-            << '-' << completion_date.day() << ", Ð¾Ð±ÑŠÑ‘Ð¼ Ñ€Ð°Ð±Ð¾Ñ‚: "
-            << scope << " Ñ‡Ð°Ñ(Ð°/Ð¾Ð²)\n";
+            << '-' << completion_date.day() << ", îáú¸ì ðàáîò: "
+            << scope << " ÷àñ(à/îâ)\n";
     }
 }
 

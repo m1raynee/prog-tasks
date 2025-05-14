@@ -33,9 +33,9 @@ inline void str::print(ostream& out) {
     Node* p = first;
     while (p) {
         if (!p->next) p->value->print(out, spec());
-        p->value->print(out);
-        out << p->value->sep;
+        else p->value->print(out);
         p = p->next;
+        if (p) out << p->value->sep;
     }
     out << first->value->end;
 }

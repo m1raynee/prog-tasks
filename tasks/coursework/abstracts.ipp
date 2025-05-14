@@ -61,8 +61,8 @@ void list<V, SpecT>::print(ostream& out) {
     Node* p = first;
     while (p) {
         p->value->print(out);
-        out << p->value->sep;
         p = p->next;
+        if (p) out << p->value->sep;
     }
     out << first->value->end;
 }

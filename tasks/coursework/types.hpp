@@ -36,7 +36,7 @@ struct date {
 struct StrChunk {
     char s[STR_CHUNK_LENGTH]{};
 
-    NODE_CONSTRAINT_FOR(StrChunk, " -> ", "nullptr")
+    NODE_CONSTRAINT_FOR(StrChunk, " -> ", " -> nullptr")
     void print(ostream& out, unsigned count);
     bool operator==(const StrChunk& other);
 };
