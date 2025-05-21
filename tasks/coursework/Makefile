@@ -3,7 +3,7 @@ CFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wco
 LDFLAGS=-std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wno-pointer-arith -g3 -O0
 BUILD_DIR=./build/Debug
 
-MODS_NAMES=types.cpp file.cpp
+MODS_NAMES=types.cpp file.cpp linking.cpp menu.cpp
 
 OBJS_NAMES = $(MODS_NAMES:.cpp=.o)
 OBJS=$(addprefix $(BUILD_DIR)/,$(OBJS_NAMES))

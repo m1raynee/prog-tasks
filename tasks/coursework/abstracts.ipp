@@ -30,11 +30,6 @@ void list<V, SpecT>::set_spec(SpecT* v) {
 }
 
 template<typename V, typename SpecT>
-[[noreturn]] bool list<V, SpecT>::operator<(
-    const list<V, SpecT>& other
-) { throw std::logic_error("Not implemented"); }
-
-template<typename V, typename SpecT>
 bool list<V, SpecT>::is_empty() {
     return first == nullptr;
 }
@@ -79,4 +74,14 @@ void list<V, SpecT>::destroy() {
         }
         delete p;
     }
+}
+
+template<typename V, typename SpecT>
+bool list<V, SpecT>::in_value(V value) {
+    Node* p = first;
+    while (p) {
+        if (*p->value == value) return true;
+        p = p->next;
+    }
+    return false;
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+#include <iomanip>
 #include "const.hpp"
 #include "abstracts.hpp"
 
@@ -8,8 +10,7 @@ using std::istream, std::ofstream;
 void print(ostream& out);                   \
 void destroy();                             \
 inline static char sep[] = SEP;             \
-inline static char end[] = END;             \
-static ofstream* protocol;
+inline static char end[] = END;
 
 struct StrChunk;
 using str = list<StrChunk, unsigned>;
@@ -17,9 +18,9 @@ using str = list<StrChunk, unsigned>;
 struct date {
     // memory efficiency!!
     // ```
-    //     2           1           0
+    // - - 2 - - - - - 1 - - - - - 0 - -
     // 0000 0000 | 0000 0000 | 0000 0000
-    //  | day||month||        year     |
+    // -|-day||month||- - - - year - - |
     // ```
     unsigned char bytes[3];
     date(
@@ -27,11 +28,18 @@ struct date {
         short unsigned month,
         short unsigned day
     );
-    unsigned year();
-    short unsigned month();
-    short unsigned day();
-    bool is_empty();
+    unsigned year() const;
+    short unsigned month() const;
+    short unsigned day() const;
+    bool is_empty() const;
+    void print(ostream& os) const;
 };
+bool operator==(const date& a, const date& b);
+bool operator< (const date& a, const date& b);
+bool operator!=(const date& a, const date& b);
+bool operator> (const date& a, const date& b);
+bool operator<=(const date& a, const date& b);
+bool operator>=(const date& a, const date& b);
 
 struct StrChunk {
     char s[STR_CHUNK_LENGTH]{};
@@ -67,11 +75,10 @@ struct MultiTask {
     list<Task> tasks{true};
     list<Task> completed_tasks{true};
     void destroy();
-    static ofstream* protocol;
 };
 
 struct Executor {
-    unsigned service_number;
+    unsigned long service_number;
     str name{};
     str address{};
 
@@ -79,6 +86,15 @@ struct Executor {
 
     NODE_CONSTRAINT_FOR(Executor, "\n", "\n")
     friend istream& operator>>(istream& is, Executor& obj);
+    bool operator==(Executor& b);
 };
+
+struct file {
+    static std::ofstream& protocol();
+    static std::ofstream& out();
+};
+
+using ExecutorN = list<Executor>::Node;
+using TaskN = list<Task>::Node;
 
 #include "types.ipp"

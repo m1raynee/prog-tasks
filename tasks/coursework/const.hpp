@@ -1,1 +1,1 @@
-#define STR_CHUNK_LENGTH 32
+#define STR_CHUNK_LENGTH 16
