@@ -45,7 +45,7 @@ struct StrChunk {
     char s[STR_CHUNK_LENGTH]{};
 
     NODE_CONSTRAINT_FOR(StrChunk, " -> ", " -> nullptr")
-    void print(ostream& out, unsigned count);
+        void print(ostream& out, unsigned count);
     bool operator==(const StrChunk& other);
 };
 
@@ -62,18 +62,18 @@ struct Task {
 
     // only completed_tasks
     unsigned scope;
-    date completion_date{0, 0, 0};
+    date completion_date{ 0, 0, 0 };
 
-    list<Executor> executors{true};
+    list<Executor> executors{ true };
     list<_Id> _executors_positions{};
 
     NODE_CONSTRAINT_FOR(Task, "\n", "\n")
-    friend istream& operator>>(istream& is, Task& obj);
+        friend istream& operator>>(istream& is, Task& obj);
 };
 
 struct MultiTask {
-    list<Task> tasks{true};
-    list<Task> completed_tasks{true};
+    list<Task> tasks{ true };
+    list<Task> completed_tasks{ true };
     void destroy();
 };
 
@@ -85,7 +85,7 @@ struct Executor {
     MultiTask task_pool;
 
     NODE_CONSTRAINT_FOR(Executor, "\n", "\n")
-    friend istream& operator>>(istream& is, Executor& obj);
+        friend istream& operator>>(istream& is, Executor& obj);
     bool operator==(Executor& b);
 };
 

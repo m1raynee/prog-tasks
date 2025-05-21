@@ -6,17 +6,17 @@ date::date(
     short unsigned _day
 ) {
     bytes[0] = _year & 0b11111111;
-    bytes[1] = ((_year  >> 8) & 0b00111111)
-             | ((_month & 0b00000011) << 6);
+    bytes[1] = ((_year >> 8) & 0b00111111)
+        | ((_month & 0b00000011) << 6);
     bytes[2] = ((_month >> 2) & 0b00000011)
-             | ((_day   & 0b00001111) << 2);
+        | ((_day & 0b00001111) << 2);
 }
 unsigned date::year() const {
     return bytes[0] | (unsigned)(bytes[1] & 0b00111111) << 8;
 }
 short unsigned date::month() const {
     return ((bytes[1] & 0b11000000) >> 6)
-         | ((bytes[2] & 0b00000011) << 2);
+        | ((bytes[2] & 0b00000011) << 2);
 }
 short unsigned date::day() const {
     return (bytes[2] & 0b01111100) >> 2;
@@ -26,8 +26,8 @@ bool date::is_empty() const {
 }
 void date::print(ostream& os) const {
     os << std::setfill('0') << std::setw(4) << year() << '-'
-       << std::setw(2) << month() << '-' << std::setw(2) << day()
-       << std::setfill(' ');
+        << std::setw(2) << month() << '-' << std::setw(2) << day()
+        << std::setfill(' ');
 }
 
 bool operator==(const date& a, const date& b) {
@@ -95,7 +95,8 @@ void Task::print(ostream& out) {
         << fee << " тыс. руб.)\n\t";
     if (completion_date.is_empty()) {
         out << "Не завершено\n";
-    } else {
+    }
+    else {
         out << "Дата завершения: " << completion_date.year()
             << '-' << completion_date.month()
             << '-' << completion_date.day() << ", объём работ: "

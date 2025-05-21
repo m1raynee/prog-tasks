@@ -13,8 +13,8 @@ istream& operator>>(istream& is, str& obj) {
     obj.set_spec(new unsigned(
         (i % STR_CHUNK_LENGTH) ? i % STR_CHUNK_LENGTH : (
             (i) ? STR_CHUNK_LENGTH : i
-        )
-    ));
+            )
+        ));
     return is;
 }
 
@@ -59,7 +59,7 @@ istream& operator>>(istream& is, list<_Id>& obj) {
     int ch; unsigned id;
     do {
         is >> id;
-        obj.push_back(new _Id{.id = id});
+        obj.push_back(new _Id{ .id = id });
     } while ((ch = is.get()) != -1 and ch == ' ' and ch != '\n');
     return is;
 }

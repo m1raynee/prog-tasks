@@ -3,17 +3,19 @@
 
 using std::ostream, std::istream;
 
-template<typename V, typename SpecT = void>
-struct list {
+template <typename V, typename SpecT = void>
+struct list
+{
     bool is_virtual;
-    struct Node {
+    struct Node
+    {
         V* value;
         Node* next;
 
         Node();
         Node(V* value);
         Node* replicate();
-    } * first, * last;
+    } *first, * last;
 
     char spec_bytes[sizeof(SpecT)];
     const SpecT spec() const;

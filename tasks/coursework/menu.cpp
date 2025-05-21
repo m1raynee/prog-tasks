@@ -12,23 +12,23 @@
 
 void loop_main(LOOP_ARGS_DEFINITION) {
     os << "7.31. Проводится учет выполнения работ разного вида несколькими исполнителями.\n"
-       << "Требуется хранить информацию об исполнителях (ФИО, адрес, табельный номер),\n"
-       << "о работах (наименование, исполнители, норма на исполнителя/-ей, тариф)\n"
-       << "и о выполненных работах (исполнители, наименование, объем, дата завершения).\n"
-       << "Надо обеспечить возможность получения:\n"
-       << "     - общего списка работ и их исполнителей,\n"
-       << "     - списка выполненных работ на конкретную дату/период (группировка по исполнителям и/или видам работ),\n"
-       << "     - работ, выполненных одним исполнителем,\n"
-       << "     - есть ли работы, выполненные одной и той же группой исполнителей.\n"
-       << " Для выполненных работ должна подсчитываться стоимость работ.\n\n";
+        << "Требуется хранить информацию об исполнителях (ФИО, адрес, табельный номер),\n"
+        << "о работах (наименование, исполнители, норма на исполнителя/-ей, тариф)\n"
+        << "и о выполненных работах (исполнители, наименование, объем, дата завершения).\n"
+        << "Надо обеспечить возможность получения:\n"
+        << "     - общего списка работ и их исполнителей,\n"
+        << "     - списка выполненных работ на конкретную дату/период (группировка по исполнителям и/или видам работ),\n"
+        << "     - работ, выполненных одним исполнителем,\n"
+        << "     - есть ли работы, выполненные одной и той же группой исполнителей.\n"
+        << " Для выполненных работ должна подсчитываться стоимость работ.\n\n";
 
-       do {
+    do {
         os << "Выберите пункт меню вывода:\n"
-           << "(1) общий список работ и их исполнителей\n"
-           << "(2) список выполненных работ на конкретную дату/период\n"
-           << "(3) работы, выполненные одним исполнителем,\n"
-           << "(4) работы, выполненные одной и той же группой исполнителей,\n"
-           << "что угодно для выхода" << '\n';
+            << "(1) общий список работ и их исполнителей\n"
+            << "(2) список выполненных работ на конкретную дату/период\n"
+            << "(3) работы, выполненные одним исполнителем,\n"
+            << "(4) работы, выполненные одной и той же группой исполнителей,\n"
+            << "что угодно для выхода" << '\n';
 
         char menu_selector;
         is >> menu_selector;
@@ -54,7 +54,7 @@ void loop_main(LOOP_ARGS_DEFINITION) {
 void info_tasks_list(std::ostream& os, list<Task>& tasks) {
     os << "Список всех работ и их исполнителей:\n";
     file::out() << "Список всех работ и их исполнителей:\n";
-    
+
     unsigned count = 0;
     TaskN* p = tasks.first;
     while (p) {
@@ -83,9 +83,9 @@ void loop_date_select(LOOP_ARGS_DEFINITION) {
 
     char selector;
     os << "Выберите метод группировки:\n"
-       << "(1) по исполнителям\n" 
-       << "(2) по работам\n"
-       << "что-либо ещё для отмены\n";
+        << "(1) по исполнителям\n"
+        << "(2) по работам\n"
+        << "что-либо ещё для отмены\n";
     is >> selector;
     os << "В даты с ";
     begin.print(os);
@@ -115,10 +115,10 @@ void info_tasks_date_by_executors(
     list<Executor>& executors,
     date beg, date end
 ) {
-    auto condition = [beg, end](TaskN* tp){
+    auto condition = [beg, end](TaskN* tp) {
         return tp->value->completion_date <= end
-           and tp->value->completion_date >= beg;
-    };
+            and tp->value->completion_date >= beg;
+        };
     ExecutorN* p = executors.first;
     while (p)
     {
@@ -168,7 +168,7 @@ void info_tasks_date_by_task(
         if (
             p->value->completion_date <= end
             and p->value->completion_date >= beg
-        ) {
+            ) {
             os << "\tЗадача ";
             p->value->completion_date.print(os);
             os << " {";
@@ -205,11 +205,11 @@ void info_tasks_of_executor(std::ostream& os, Executor* executor) {
     os << "Задачи исполнителя {";
     executor->name.print(os);
     os << "}:\n------------------------------------\n";
-    
+
     file::out() << "Задачи исполнителя {";
     executor->name.print(file::out());
     file::out() << "}:\n------------------------------------\n";
-    
+
     TaskN* p = executor->task_pool.tasks.first;
     while (p) {
         p->value->print(os);
@@ -235,15 +235,15 @@ void info_tasks_of_executor(std::ostream& os, Executor* executor) {
 
 
 void loop_executors_group_select(LOOP_ARGS_DEFINITION) {
-    list<Executor> virtual_executors{true};
-    list<Task> virtual_tasks_selected{true};
+    list<Executor> virtual_executors{ true };
+    list<Task> virtual_tasks_selected{ true };
     ExecutorN* p;
     TaskN* q, * prev;
     unsigned e_count = 0;
     unsigned t_count = 0;
     do
     {
-        os << "Для исполнителя №" << e_count+1 << ':';
+        os << "Для исполнителя №" << e_count + 1 << ':';
         p = loop_executor_select(LOOP_ARGS);
         if (p) {
             ++e_count;
@@ -256,7 +256,8 @@ void loop_executors_group_select(LOOP_ARGS_DEFINITION) {
                         ++t_count;
                     } q = q->next;
                 }
-            } else {
+            }
+            else {
                 prev = nullptr;
                 q = virtual_tasks_selected.first;
                 while (q) {
@@ -264,13 +265,15 @@ void loop_executors_group_select(LOOP_ARGS_DEFINITION) {
                         if (prev == nullptr) {
                             virtual_tasks_selected.first = virtual_tasks_selected.first->next;
                             delete q; q = virtual_tasks_selected.first;
-                        } else {
+                        }
+                        else {
                             prev->next = q->next;
                             delete q;
                             q = prev->next;
                         }
                         --t_count;
-                    } else { prev = q; q = q->next; }
+                    }
+                    else { prev = q; q = q->next; }
                 }
             }
             os << "Выбрано задач: " << t_count << '\n';
@@ -291,9 +294,9 @@ void info_group_tasks(
         os << "Не выбрано ни одного исполнителя\n\n"; return;
     }
     os << "Для исполнителей (кол-во: " << e << ") выбрано задач в количестве " << t << " шт.:\n"
-    << "Исполнители:\n";
+        << "Исполнители:\n";
     file::out() << "Для исполнителей (кол-во: " << e << ") выбрано задач в количестве " << t << " шт.:\n"
-    << "Исполнители:\n";
+        << "Исполнители:\n";
 
     ExecutorN* ep = executors.first;
     while (ep) {

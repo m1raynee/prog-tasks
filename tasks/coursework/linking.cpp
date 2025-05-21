@@ -3,7 +3,8 @@
 void add_to_multitask(MultiTask* mt, Task* t_ptr) {
     if (t_ptr->completion_date.is_empty()) {
         mt->tasks.push_back(t_ptr);
-    } else {
+    }
+    else {
         mt->completed_tasks.push_back(t_ptr);
     }
 }
@@ -30,7 +31,7 @@ void link_executors_to_tasks(list<Executor>& es, list<Task>& ts) {
         file::protocol() << "}:\n";
         cur_task->value->_executors_positions.print(file::protocol());
         file::protocol() << '\n';
-        
+
         list<_Id>::Node* cur_id = cur_task->value->_executors_positions.first;
         ExecutorN* cur_exec = es.first;
         while (cur_id) {
