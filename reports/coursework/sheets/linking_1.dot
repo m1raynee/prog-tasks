@@ -1,0 +1,49 @@
+digraph G {
+    rankdir=TB;
+    node [shape=box, style="rounded", fontname="Courier New"];
+    node [shape=ellipse, style=filled] Start End;
+
+    Start [label="Начало"];
+    A [label="TaskN* cur_task = ts.first"];
+    B [label="file::protocol() << \"Начало образования связей\\n\";"];
+    C [label="cur_task != nullptr?", shape=diamond];
+    D [label="i = 0"];
+    E [label="file::protocol() << \"Для задачи {\";\ncur_task->value->name.print(...);\nfile::protocol() << }:\\n\""];
+    F [label="cur_task->value->_executors_positions.print(...)"];
+    G [label="list<_Id>::Node* cur_id = cur_task->value->_executors_positions.first"];
+    H [label="ExecutorN* cur_exec = es.first"];
+    I [label="cur_id != nullptr?", shape=diamond];
+    J [label="i == cur_id->value->id?", shape=diamond];
+    K [label="form_bond(cur_exec, cur_task);\ncur_id = cur_id->next;"];
+    L [label="i++;\ncur_exec = cur_exec->next;"];
+    M [label="cur_exec = cur_task->value->executors.first"];
+    N [label="cur_exec != nullptr?", shape=diamond];
+    O [label="file::protocol() << \"\tСвязь с {\";\ncur_exec->value->name.print(...);\nfile::protocol() << }\\n\""];
+    P [label="cur_exec = cur_exec->next;"];
+    Q [label="file::protocol() << std::endl;"];
+    R [label="cur_task = cur_task->next;"];
+
+    Start -> A;
+    A -> B;
+    B -> C;
+    C -> D [label="true"];
+    D -> E;
+    E -> F;
+    F -> G;
+    G -> H;
+    H -> I;
+    I -> J [label="true"];
+    J -> K [label="true"];
+    J -> L [label="false"];
+    K -> I;
+    L -> I;
+    I -> M [label="false"];
+    M -> N;
+    N -> O [label="true"];
+    O -> P;
+    P -> N;
+    N -> Q [label="false"];
+    Q -> R;
+    R -> C;
+    C -> End [label="false"];
+}

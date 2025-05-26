@@ -1,0 +1,43 @@
+digraph G {
+    rankdir=TB;
+    fontname="Courier New";
+    node [fontname="Courier New"];
+
+    Start [label="Начало", shape=ellipse];
+    A [label="auto condition = [beg, end](TaskN* tp) {\n  return tp->value->completion_date <= end and\n         tp->value->completion_date >= beg;\n};"];
+    B [label="ExecutorN* p = executors.first"];
+    C [label="p != nullptr?", shape=diamond];
+    D [label="task_p = p->value->task_pool.completed_tasks.first"];
+    E [label="task_p && condition(task_p)?", shape=diamond];
+    F [label="first = true"];
+    G [label="task_p != nullptr", shape=diamond];
+    H [label="condition(task_p)", shape=diamond];
+    I [label="if (first) { вывести заголовок исполнителя }"];
+    J [label="вывести дату и название задачи в поток и файл"];
+    K [label="task_p = task_p->next"];
+    L [label="if (!first) вывести \\n"];
+    M [label="p = p->next"];
+    N [label="os << std::endl; file::out() << std::endl;"];
+    End [label="Конец", shape=ellipse];
+
+    Start -> A;
+    A -> B;
+    B -> C;
+    C -> D [label="true"];
+    C -> N [label="false"];
+    D -> E;
+    E -> F [label="true"];
+    E -> G [label="false"];
+    F -> G;
+    G -> H [label="true"];
+    G -> L [label="false"];
+    H -> I [label="true"];
+    H -> J [label="false"];
+    I -> J;
+    J -> K;
+    K -> G;
+    G -> M [label="false"];
+    M -> C;
+    L -> N;
+    N -> End;
+}

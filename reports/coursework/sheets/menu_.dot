@@ -1,0 +1,51 @@
+Start [label="Начало", shape=ellipse];
+    A [label="executors.is_empty()?", shape=diamond];
+    B [label="os << \"Не выбрано ни одного исполнителя\\n\\n\"; return;"];
+    C [label="os << \"Для исполнителей (кол-во: \" << e << ..."];
+    D [label="ep = executors.first"];
+    E [label="ep != nullptr?", shape=diamond];
+    F [label="os << '\\t'; ep->value->name.print(os); os << '\\n';\nfile::out() аналогично"];
+    G [label="ep = ep->next"];
+    H [label="os << '\\n'; file::out() << '\\n'"];
+    I [label="tp = tasks.first"];
+    J [label="tp != nullptr?", shape=diamond];
+    K [label="tp->value->name.print(os); os << '\\n';\nfile::out() аналогично"];
+    L [label="executors.is_empty()?", shape=diamond];
+    M [label="os << \"\tИсполнители:\\n\"; file::out() аналогично"];
+    N [label="ep_print = tp->value->executors.first"];
+    O [label="ep_print != nullptr?", shape=diamond];
+    P [label="os << \"\t\t\"; if (executors.in_value(...)) os << \"> \";\nep_print->value->name.print(os); os << '\\n';\nfile::out() аналогично"];
+    Q [label="ep_print = ep_print->next"];
+    R [label="tp = tp->next"];
+    S [label="os << std::endl; file::out() << std::endl;"];
+    End [label="Конец", shape=ellipse];
+
+    Start -> A;
+    A -> B [label="true"];
+    A -> C [label="false"];
+    B -> End;
+
+    C -> D;
+    D -> E;
+    E -> F [label="true"];
+    F -> G;
+    G -> E;
+    E -> H [label="false"];
+
+    H -> I;
+    I -> J;
+    J -> K [label="true"];
+    K -> L;
+    L -> M [label="false"];
+    L -> N [label="true"];
+    M -> N;
+
+    N -> O;
+    O -> P [label="true"];
+    P -> Q;
+    Q -> O;
+    O -> R [label="false"];
+
+    R -> J;
+    J -> S [label="false"];
+    S -> End;

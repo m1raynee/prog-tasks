@@ -1,0 +1,56 @@
+Start [label="Начало", shape=ellipse];
+    A [label="list<Executor> virtual_executors{true};\nlist<Task> virtual_tasks_selected{true};\nExecutorN* p;\nTaskN *q, *prev;\nunsigned e_count = 0;\nunsigned t_count = 0;"];
+    B [label="os << \"Для исполнителя №\" << e_count + 1 << ':'"];
+    C [label="p = loop_executor_select(...)"];
+    D [label="p != nullptr?", shape=diamond];
+    E [label="++e_count;\nvirtual_executors.push_back(p->replicate())"];
+    F [label="virtual_tasks_selected.is_empty()?", shape=diamond];
+    G [label="q = tasks.first"];
+    H [label="q != nullptr", shape=diamond];
+    I [label="if (q->value->executors.in_value(*p->value)) {\n  virtual_tasks_selected.push_back(q->replicate());\n  ++t_count;\n}"];
+    J [label="q = q->next"];
+    K [label="prev = nullptr;\nq = virtual_tasks_selected.first"];
+    L [label="q != nullptr", shape=diamond];
+    M [label="!q->value->executors.in_value(*p->value)?", shape=diamond];
+    N [label="удалить узел q"];
+    O [label="--t_count"];
+    P [label="prev = q;\nq = q->next"];
+    Q [label="os << \"Выбрано задач: \" << t_count << '\\n'"];
+    R [label="p == nullptr?", shape=diamond];
+    S [label="os << '\\n'"];
+    T [label="info_group_tasks(os, virtual_executors, e_count, virtual_tasks_selected, t_count)"];
+    U [label="virtual_executors.destroy();\nvirtual_tasks_selected.destroy()"];
+    End [label="Конец", shape=ellipse];
+
+    Start -> A;
+    A -> B;
+    B -> C;
+    C -> D;
+    D -> E [label="да"];
+    D -> X [label="нет"];
+    X -> End;
+
+    E -> F;
+    F -> G [label="да"];
+    F -> K [label="нет"];
+    G -> H;
+    H -> I [label="true"];
+    I -> J;
+    J -> H;
+    H -> K [label="false"];
+
+    K -> L;
+    L -> M [label="true"];
+    M -> N [label="true"];
+    N -> O;
+    O -> K;
+    M -> P [label="false"];
+    P -> L;
+
+    L -> Q [label="false"];
+    Q -> R;
+    R -> B [label="нет"];
+    R -> S [label="да"];
+    S -> T;
+    T -> U;
+    U -> End;
